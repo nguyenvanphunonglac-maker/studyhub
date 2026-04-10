@@ -114,6 +114,18 @@ export const quizService = {
     return docRef.id;
   },
 
+  async createQuizSetFromAI(userId: string, title: string, questionsFromAI: any[], authorName: string = "AI Assistant"): Promise<string> {
+    const questions = questionsFromAI.map(q => ({
+      text: q.question,
+      options: q.options,
+      correctAnswer: q.answer.charCodeAt(0) - 65, // Convert A->0, B->1, etc.
+      tags: ["AI Generated"],
+      subject: "AI"
+    }));
+
+    return await this.createQuizSet(userId, title, "Được tạo tự động bởi AI từ tài liệu của bạn.", questions, "AI", authorName);
+  },
+
   async toggleQuizSetPublic(userId: string, setId: string, isPublic: boolean) {
     const docRef = doc(db, QUIZSETS_PATH(userId), setId);
     await updateDoc(docRef, {

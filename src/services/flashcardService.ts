@@ -57,6 +57,33 @@ export const flashcardService = {
     return docRef.id;
   },
 
+  async createSetFromAI(userId: string, title: string, cardsFromAI: {front: string, back: string}[], authorName: string = "AI Assistant"): Promise<string> {
+    const cards = cardsFromAI.map(card => ({
+      front: card.front,
+      back: card.back,
+      easeFactor: 2.5,
+      interval: 0,
+      repetitions: 0,
+      nextReview: Timestamp.now(),
+      userId,
+      tags: ["AI Generated"],
+      subject: "AI"
+    }));
+
+    const docRef = await addDoc(collection(db, SETS_PATH(userId)), {
+      title,
+      description: "Được tạo tự động bởi AI từ tài liệu của bạn.",
+      cards,
+      userId,
+      authorName,
+      isPublic: false,
+      subject: "AI",
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    });
+    return docRef.id;
+  },
+
   async togglePublicSet(userId: string, setId: string, isPublic: boolean) {
     const setRef = doc(db, SETS_PATH(userId), setId);
     await updateDoc(setRef, {

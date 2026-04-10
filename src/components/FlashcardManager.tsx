@@ -12,6 +12,8 @@ import { auth } from "@/lib/firebase";
 import { cn } from "@/lib/utils";
 import ConfirmModal from "@/components/ConfirmModal";
 import PageShell from "./PageShell";
+import { documentProcessor } from "@/utils/documentProcessor";
+import { aiService } from "@/services/aiService";
 
 export default function FlashcardManager() {
   const { user } = useAuth();
@@ -31,6 +33,8 @@ export default function FlashcardManager() {
   const [front, setFront] = useState("");
   const [back, setBack] = useState("");
   const [editingCardIdx, setEditingCardIdx] = useState<number | null>(null);
+  const [isProcessingAI, setIsProcessingAI] = useState(false);
+  const aiFileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!user || !auth.currentUser) return;
@@ -109,6 +113,41 @@ export default function FlashcardManager() {
     setBack("");
     setEditingCardIdx(null);
     setIsAddingCard(false);
+  };
+
+  const handleAIUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    setIsProcessingAI(true);
+    try {
+      const text = await documentProcessor.extractText(file);
+      const response = await aiService.chat(
+        `Dựa trên nội dung sau, hãy tạo ra một bộ thẻ ghi nhớ (flashcards). 
+        Trả về kết quả dưới dạng mảng JSON duy nhất: [{"front": "câu hỏi", "back": "đáp án"}]
+        
+        Nội dung: ${text.substring(0, 10000)}`
+      );
+      
+      const jsonStr = response.match(/\[[\s\S]*\]/)?.[0] || response;
+      const cards = JSON.parse(jsonStr);
+
+      if (Array.isArray(cards)) {
+        const setId = await flashcardService.createSetFromAI(
+          user.uid, 
+          `AI: ${file.name.split('.')[0]}`, 
+          cards, 
+          user.displayName || "Gia sư AI"
+        );
+        console.log("Đã tạo bộ thẻ từ AI:", setId);
+      }
+    } catch (error) {
+      console.error("Lỗi tạo bộ thẻ bằng AI:", error);
+      alert("Không thể tạo bộ thẻ bằng AI. Vui lòng thử lại với file nhỏ hơn hoặc định dạng khác.");
+    } finally {
+      setIsProcessingAI(false);
+      if (aiFileInputRef.current) aiFileInputRef.current.value = "";
+    }
   };
 
   if (activeView === "review" && editingSet) {
@@ -273,10 +312,29 @@ export default function FlashcardManager() {
                 </select>
                 <button
                   onClick={() => setIsCreatingSet(true)}
-                  className="flex items-center gap-2 bg-accent text-background px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-all shadow-xl shadow-accent/5"
+                  className="flex items-center gap-2 bg-active-notion text-accent px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-accent/5 transition-all border border-border-notion"
                 >
                   <Plus size={18} />
                   Tạo bộ thẻ
+                </button>
+                <input 
+                  type="file" 
+                  ref={aiFileInputRef} 
+                  onChange={handleAIUpload} 
+                  className="hidden" 
+                  accept=".pdf,.docx,.txt,.md" 
+                />
+                <button
+                  onClick={() => aiFileInputRef.current?.click()}
+                  disabled={isProcessingAI}
+                  className="flex items-center gap-3 bg-accent text-background px-8 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-accent/20 disabled:opacity-50"
+                >
+                  {isProcessingAI ? (
+                    <Loader2 size={18} className="animate-spin" />
+                  ) : (
+                    <Sparkles size={18} />
+                  )}
+                  {isProcessingAI ? "Đang xử lý AI..." : "Tạo bằng AI ✨"}
                 </button>
               </div>
             </div>

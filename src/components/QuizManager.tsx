@@ -11,6 +11,9 @@ import { subjects } from "@/context/LanguageContext";
 import { cn, cleanObject } from "@/lib/utils";
 import ConfirmModal from "@/components/ConfirmModal";
 import PageShell from "./PageShell";
+import { documentProcessor } from "@/utils/documentProcessor";
+import { aiService } from "@/services/aiService";
+import { Loader2 } from "lucide-react";
 
 export default function QuizManager() {
   const { user } = useAuth();
@@ -34,6 +37,8 @@ export default function QuizManager() {
   const [newSetSubject, setNewSetSubject] = useState("");
 
   const [selectedSubject, setSelectedSubject] = useState<string>("");
+  const [isProcessingAI, setIsProcessingAI] = useState(false);
+  const aiFileInputRef = useRef<HTMLInputElement>(null);
   const [confirmDelete, setConfirmDelete] = useState<{ open: boolean; onConfirm: () => void }>({ open: false, onConfirm: () => {} });
 
   useEffect(() => {
@@ -107,26 +112,35 @@ export default function QuizManager() {
     setIsAdding(false);
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    }
+  };
+
+  const handleAIUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && user && editingSet) {
-      import("papaparse").then(({ default: Papa }) => {
-        Papa.parse(file, {
-          header: true,
-          complete: async (results) => {
-            const parsed = results.data.map((row: any) => ({
-              text: row.question || row.text,
-              options: [row.option1, row.option2, row.option3, row.option4],
-              correctAnswer: parseInt(row.correct) - 1,
-              tags: [],
-              subject: editingSet.subject || "Khác"
-            })).filter((q: any) => q.text && q.options.length === 4);
-            
-            const updatedQs = [...editingSet.questions, ...parsed];
-            await quizService.updateQuestionsInSet(user.uid, editingSet.id!, updatedQs);
-          }
-        });
-      });
+    if (!file || !user) return;
+
+    setIsProcessingAI(true);
+    try {
+      const text = await documentProcessor.extractText(file);
+      const quizData = await aiService.generateQuiz(text);
+      
+      if (quizData && Array.isArray(quizData)) {
+        const setId = await quizService.createQuizSetFromAI(
+          user.uid, 
+          `AI: ${file.name.split('.')[0]}`, 
+          quizData, 
+          user.displayName || "Gia sư AI"
+        );
+        console.log("Đã tạo bộ đề từ AI:", setId);
+      } else {
+        alert("AI không thể tạo được bộ đề từ nội dung này. Thử file khác nhé!");
+      }
+    } catch (error) {
+      console.error("Lỗi tạo bộ đề bằng AI:", error);
+      alert("Lỗi khi gọi AI. Có thể file quá lớn hoặc hết hạn mức.");
+    } finally {
+      setIsProcessingAI(false);
+      if (aiFileInputRef.current) aiFileInputRef.current.value = "";
     }
   };
 
@@ -183,10 +197,29 @@ export default function QuizManager() {
                   </select>
                   <button
                     onClick={() => setIsCreatingSet(true)}
-                    className="flex items-center gap-2 bg-accent text-background px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-accent/5"
+                    className="flex items-center gap-2 bg-active-notion/40 text-accent px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-accent/5 transition-all border border-border-notion"
                   >
                     <Plus size={18} />
                     Tạo bộ đề
+                  </button>
+                  <input 
+                    type="file" 
+                    ref={aiFileInputRef} 
+                    onChange={handleAIUpload} 
+                    className="hidden" 
+                    accept=".pdf,.docx,.txt,.md" 
+                  />
+                  <button
+                    onClick={() => aiFileInputRef.current?.click()}
+                    disabled={isProcessingAI}
+                    className="flex items-center gap-3 bg-accent text-background px-8 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-accent/20 disabled:opacity-50"
+                  >
+                    {isProcessingAI ? (
+                      <Loader2 size={18} className="animate-spin" />
+                    ) : (
+                      <Sparkles size={18} />
+                    )}
+                    {isProcessingAI ? "Đang xử lý AI..." : "Tạo bằng AI ✨"}
                   </button>
               </div>
             )}
