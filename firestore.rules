@@ -1,0 +1,46 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // User Profile Rules
+    match /users/{userId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Global Read for Public Content (Community)
+    match /{path=**}/quizSets/{setId} {
+      allow read: if request.auth != null && resource.data.isPublic == true;
+    }
+    match /{path=**}/flashcardSets/{setId} {
+      allow read: if request.auth != null && resource.data.isPublic == true;
+    }
+
+    // Owner Access Rules (Using path variables for robustness)
+    match /users/{userId}/{allSubcollections=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Note Rules (Root collection)
+    match /notes/{noteId} {
+      allow read, write: if request.auth != null && (request.auth.uid == resource.data.userId || request.auth.uid == request.resource.data.userId);
+    }
+    // Community Rules
+    match /community_posts/{postId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update: if request.auth != null;
+      
+      match /comments/{commentId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null;
+      }
+    }
+
+    // Pomodoro Sessions
+    match /pomodoro_sessions/{sessionId} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+    }
+  }
+}

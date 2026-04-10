@@ -1,0 +1,160 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --color-sidebar: var(--sidebar);
+  --color-accent: var(--acc);
+  --color-card: var(--card);
+  --color-card-hover: var(--card-h);
+  --color-border-notion: var(--brd);
+  --color-active-notion: var(--act);
+  
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  
+  --shadow-soft: 0 2px 4px rgba(0,0,0,0.01), 0 12px 24px rgba(0,0,0,0.03);
+  --shadow-glow: 0 0 20px rgba(var(--acc-rgb), 0.1);
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+:root {
+  color-scheme: light;
+  --bg: #FBFAF9;
+  --fg: #2D2A26;
+  --sidebar: #F7F6F3;
+  --card: #FFFFFF;
+  --card-h: #F9F9F8;
+  --acc: #2D2A26;
+  --acc-rgb: 45, 42, 38;
+  --brd: rgba(45, 42, 38, 0.05);
+  --act: rgba(45, 42, 38, 0.04);
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+}
+
+/* --- THEMES --- */
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0A0C10;
+  --fg: #E2E8F0;
+  --sidebar: #111418;
+  --card: #161B22;
+  --card-h: #1C2128;
+  --acc: #F8FAFC;
+  --acc-rgb: 248, 250, 252;
+  --brd: rgba(255, 255, 255, 0.08);
+  --act: rgba(255, 255, 255, 0.06);
+  --success: #34D399;
+  --warning: #FBBF24;
+  --error: #F87171;
+}
+
+[data-theme='midnight'] {
+  color-scheme: dark;
+  --bg: #05070A;
+  --fg: #F1F5F9;
+  --sidebar: #0C0F16;
+  --card: #121721;
+  --card-h: #1A202E;
+  --acc: #38BDF8;
+  --acc-rgb: 56, 189, 248;
+  --brd: rgba(56, 189, 248, 0.1);
+  --act: rgba(56, 189, 248, 0.05);
+  --success: #38BDF8;
+  --warning: #F59E0B;
+  --error: #FB7185;
+}
+
+[data-theme='forest'] {
+  color-scheme: dark;
+  --bg: #0D1310;
+  --fg: #E0EBE2;
+  --sidebar: #141C18;
+  --card: #1D2622;
+  --card-h: #26312C;
+  --acc: #10B981;
+  --brd: rgba(16, 185, 129, 0.12);
+  --act: rgba(16, 185, 129, 0.08);
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+}
+
+[data-theme='sunset'] {
+  color-scheme: dark;
+  --bg: #140F0E;
+  --fg: #FCEBE8;
+  --sidebar: #1C1514;
+  --card: #241A19;
+  --card-h: #2D2120;
+  --acc: #F43F5E;
+  --brd: rgba(244, 63, 94, 0.12);
+  --act: rgba(244, 63, 94, 0.08);
+  --success: #F43F5E;
+  --warning: #F59E0B;
+  --error: #EF4444;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground font-sans antialiased transition-all duration-300;
+  }
+}
+
+.mesh-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0.4;
+  filter: blur(100px);
+}
+
+.mesh-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--acc);
+  opacity: 0.1;
+  width: 600px;
+  height: 600px;
+}
+
+.glass {
+  @apply bg-card/60 backdrop-blur-2xl border border-border-notion;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+}
+
+.perspective-2000 {
+  perspective: 2000px;
+  -webkit-perspective: 2000px;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+.card-gradient {
+  background: linear-gradient(135deg, var(--card) 0%, var(--card-h) 100%);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--acc); border-radius: 10px; }
