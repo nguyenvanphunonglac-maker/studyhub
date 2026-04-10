@@ -24,7 +24,6 @@ const Community = dynamic(() => import("./Community"), { loading: loadingGrid })
 const KanbanBoard = dynamic(() => import("./KanbanBoard"), { loading: loadingCard });
 const HabitTracker = dynamic(() => import("./HabitTracker"), { loading: loadingCard });
 const MindMap = dynamic(() => import("./MindMap"), { loading: loadingCard });
-const AIStudyBuddy = dynamic(() => import("./AIStudyBuddy"), { ssr: false });
 
 export type ViewType = "dashboard" | "notes" | "flashcards" | "quiz" | "pomodoro" | "community" | "kanban" | "habits" | "mindmap";
 
@@ -212,8 +211,7 @@ export default function Dashboard() {
         </div>
       </main>
 
-      {/* AI Study Buddy */}
-      <AIStudyBuddy context={view === "notes" && activeNote ? `Tiêu đề: ${activeNote.title}\n\nNội dung: ${activeNote.content}` : undefined} />
+
     </div>
   );
 }
