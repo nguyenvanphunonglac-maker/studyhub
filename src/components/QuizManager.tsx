@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, memo } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { quizService, Question, QuizResult, QuizSet } from "@/services/quizService";
+import { quizService, Question, QuizResult, QuizSet, QuizAnswer } from "@/services/quizService";
 import { Plus, Trash2, FileUp, Play, CheckCircle2, XCircle, History, ChevronRight, LayoutList, BookOpen, Sparkles, Trophy } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
@@ -33,6 +33,7 @@ export default function QuizManager() {
   const [newSetDescription, setNewSetDescription] = useState("");
   const [newSetSubject, setNewSetSubject] = useState("");
 
+  const [selectedResult, setSelectedResult] = useState<QuizResult | null>(null);
   const [selectedSubject, setSelectedSubject] = useState<string>("");
   const [confirmDelete, setConfirmDelete] = useState<{ open: boolean; onConfirm: () => void }>({ open: false, onConfirm: () => {} });
 
@@ -469,33 +470,104 @@ export default function QuizManager() {
 
             {activeTab === "history" && (
               <section className="space-y-4 animate-in fade-in duration-500">
-                {results.map((res) => (
-                  <motion.div 
-                    key={res.id} 
-                    whileHover={{ scale: 1.01 }}
-                    className="flex items-center justify-between p-8 bg-card/40 backdrop-blur-sm border border-border-notion rounded-[24px] shadow-soft hover:shadow-xl hover:shadow-accent/5 transition-all"
-                  >
-                    <div className="flex items-center gap-8">
-                      <div className={cn(
-                        "w-16 h-16 rounded-[20px] flex items-center justify-center font-extrabold text-2xl shadow-inner border",
-                        res.score / res.total >= 0.8 ? 'bg-success/10 text-success border-success/20' : 'bg-warning/10 text-warning border-warning/20'
-                      )}>
-                        {Math.round((res.score / res.total) * 100)}<span className="text-[10px] opacity-40 ml-0.5">%</span>
-                      </div>
-                      <div>
-                        <p className="font-extrabold text-accent text-xl tracking-tight">{res.score} / {res.total} {t('correct')}</p>
-                        <p className="text-[10px] font-bold text-foreground/20 uppercase tracking-[0.2em] mt-1">{res.date.toDate().toLocaleDateString()} • {res.date.toDate().toLocaleTimeString()}</p>
-                      </div>
-                    </div>
-                    <button className="p-3 bg-active-notion/40 text-foreground/10 hover:text-accent rounded-xl transition-all border border-border-notion">
-                      <ChevronRight size={20} />
+                {selectedResult ? (
+                  <div className="space-y-6">
+                    <button 
+                      onClick={() => setSelectedResult(null)}
+                      className="flex items-center gap-2 text-foreground/40 hover:text-accent font-bold uppercase text-[10px] tracking-widest transition-all group mb-6"
+                    >
+                      <ChevronRight size={14} className="rotate-180 group-hover:-translate-x-1 transition-transform" /> Quay lại lịch sử
                     </button>
-                  </motion.div>
-                ))}
-                {results.length === 0 && (
-                  <div className="text-center py-24 bg-active-notion/5 border-2 border-dashed border-border-notion rounded-[32px]">
-                    <p className="text-foreground/30 font-bold uppercase text-[11px] tracking-widest">{t('no_history')}</p>
+
+                    <div className="p-8 glass rounded-[32px] border border-border-notion/50 shadow-2xl">
+                      <div className="flex items-center justify-between mb-8">
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/30 mb-2">Kết quả kiểm tra</p>
+                          <p className="text-2xl font-extrabold text-accent">{selectedResult.score} / {selectedResult.total} câu chính xác</p>
+                          <p className="text-lg text-foreground/40 font-bold mt-2">Tỷ lệ: <span className={selectedResult.score / selectedResult.total >= 0.8 ? "text-success" : "text-warning"}>{Math.round((selectedResult.score / selectedResult.total) * 100)}%</span></p>
+                        </div>
+                        <div className={cn(
+                          "w-24 h-24 rounded-[20px] flex items-center justify-center font-extrabold text-4xl shadow-inner border",
+                          selectedResult.score / selectedResult.total >= 0.8 ? 'bg-success/10 text-success border-success/20' : 'bg-warning/10 text-warning border-warning/20'
+                        )}>
+                          {Math.round((selectedResult.score / selectedResult.total) * 100)}<span className="text-sm opacity-40">%</span>
+                        </div>
+                      </div>
+                      <p className="text-[10px] font-bold text-foreground/20 uppercase tracking-[0.2em]">{selectedResult.date.toDate().toLocaleDateString()} • {selectedResult.date.toDate().toLocaleTimeString()}</p>
+                    </div>
+
+                    {selectedResult.answers && selectedResult.answers.length > 0 && (
+                      <div className="space-y-4">
+                        <h3 className="text-xs font-bold text-foreground/30 uppercase tracking-[0.2em]">Chi tiết từng câu</h3>
+                        {selectedResult.answers.map((answer, idx) => (
+                          <motion.div 
+                            key={idx}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: idx * 0.05 }}
+                            className={cn(
+                              "p-6 rounded-2xl border-2 glass",
+                              answer.isCorrect ? "border-success/30 bg-success/5" : "border-error/30 bg-error/5"
+                            )}
+                          >
+                            <div className="flex items-start gap-4">
+                              <div className={cn(
+                                "w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-1",
+                                answer.isCorrect ? "bg-success text-background" : "bg-error text-background"
+                              )}>
+                                {answer.isCorrect ? <CheckCircle2 size={20} /> : <XCircle size={20} />}
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-bold text-accent mb-3">Câu {idx + 1}: {answer.questionText}</p>
+                                <div className="space-y-2 text-sm">
+                                  <p className={answer.isCorrect ? "text-success" : "text-foreground/60"}>
+                                    <span className="font-semibold">Câu trả lời của bạn:</span> {answer.userAnswer}
+                                  </p>
+                                  {!answer.isCorrect && (
+                                    <p className="text-success font-semibold">
+                                      <span>Câu trả lời đúng:</span> {answer.correctAnswer}
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    )}
                   </div>
+                ) : (
+                  <>
+                    {results.map((res) => (
+                      <motion.div 
+                        key={res.id} 
+                        whileHover={{ scale: 1.01 }}
+                        onClick={() => setSelectedResult(res)}
+                        className="flex items-center justify-between p-8 bg-card/40 backdrop-blur-sm border border-border-notion rounded-[24px] shadow-soft hover:shadow-xl hover:shadow-accent/5 transition-all cursor-pointer"
+                      >
+                        <div className="flex items-center gap-8">
+                          <div className={cn(
+                            "w-16 h-16 rounded-[20px] flex items-center justify-center font-extrabold text-2xl shadow-inner border",
+                            res.score / res.total >= 0.8 ? 'bg-success/10 text-success border-success/20' : 'bg-warning/10 text-warning border-warning/20'
+                          )}>
+                            {Math.round((res.score / res.total) * 100)}<span className="text-[10px] opacity-40 ml-0.5">%</span>
+                          </div>
+                          <div>
+                            <p className="font-extrabold text-accent text-xl tracking-tight">{res.score} / {res.total} {t('correct')}</p>
+                            <p className="text-[10px] font-bold text-foreground/20 uppercase tracking-[0.2em] mt-1">{res.date.toDate().toLocaleDateString()} • {res.date.toDate().toLocaleTimeString()}</p>
+                          </div>
+                        </div>
+                        <button className="p-3 bg-active-notion/40 text-foreground/10 hover:text-accent rounded-xl transition-all border border-border-notion">
+                          <ChevronRight size={20} />
+                        </button>
+                      </motion.div>
+                    ))}
+                    {results.length === 0 && (
+                      <div className="text-center py-24 bg-active-notion/5 border-2 border-dashed border-border-notion rounded-[32px]">
+                        <p className="text-foreground/30 font-bold uppercase text-[11px] tracking-widest">{t('no_history')}</p>
+                      </div>
+                    )}
+                  </>
                 )}
               </section>
             )}
@@ -509,128 +581,240 @@ export default function QuizManager() {
 function QuizActive({ questions, onExit }: { questions: Question[], onExit: () => void }) {
   const { user } = useAuth();
   const { t } = useLanguage();
-  const [currentIdx, setCurrentIdx] = useState(0);
-  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
-  const [isAnswered, setIsAnswered] = useState(false);
-  const [score, setScore] = useState(0);
-  const [isFinished, setIsFinished] = useState(false);
-  
+
   const [quizQuestions] = useState(() => [...questions].sort(() => Math.random() - 0.5).slice(0, 10));
+  // selectedAnswers: map from question index -> selected option index (can change before submit)
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showDetail, setShowDetail] = useState(false);
+
   const currentQ = quizQuestions[currentIdx];
+  const totalAnswered = Object.keys(selectedAnswers).length;
+  const allAnswered = totalAnswered === quizQuestions.length;
 
-  const handleAnswer = (idx: number) => {
-    if (isAnswered) return;
-    setSelectedIdx(idx);
-    setIsAnswered(true);
-    if (idx === currentQ.correctAnswer) {
-      setScore(s => s + 1);
-    }
+  // Compute results after submit
+  const results = quizQuestions.map((q, i) => {
+    const userIdx = selectedAnswers[i] ?? -1;
+    const isCorrect = userIdx === q.correctAnswer;
+    return {
+      questionText: q.text,
+      userAnswer: userIdx >= 0 ? q.options[userIdx] : '(Bỏ qua)',
+      correctAnswer: q.options[q.correctAnswer],
+      isCorrect,
+    };
+  });
+  const score = results.filter(r => r.isCorrect).length;
+
+  const handleSubmit = async () => {
+    await quizService.saveResult(user!.uid, score, quizQuestions.length, undefined, results);
+    setIsSubmitted(true);
   };
 
-  const handleNext = async () => {
-    if (currentIdx < quizQuestions.length - 1) {
-      setCurrentIdx(currentIdx + 1);
-      setSelectedIdx(null);
-      setIsAnswered(false);
-    } else {
-      await quizService.saveResult(user!.uid, score, quizQuestions.length);
-      setIsFinished(true);
+  // --- Submitted: show score + detail ---
+  if (isSubmitted) {
+    if (showDetail) {
+      return (
+        <div className="flex-1 flex flex-col bg-background p-8 overflow-y-auto">
+          <div className="max-w-4xl mx-auto w-full">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-extrabold text-accent">Chi tiết kết quả</h2>
+              <button onClick={() => setShowDetail(false)} className="bg-accent text-background px-6 py-2 rounded-xl font-bold text-sm hover:scale-105 active:scale-95 transition-all">
+                Quay lại
+              </button>
+            </div>
+            <div className="space-y-4">
+              {results.map((r, idx) => (
+                <motion.div key={idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.04 }}
+                  className={cn("p-6 rounded-2xl border-2 glass", r.isCorrect ? "border-success/30 bg-success/5" : "border-error/30 bg-error/5")}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-1", r.isCorrect ? "bg-success text-background" : "bg-error text-background")}>
+                      {r.isCorrect ? <CheckCircle2 size={18} /> : <XCircle size={18} />}
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-bold text-accent mb-2">Câu {idx + 1}: {r.questionText}</p>
+                      <p className={cn("text-sm", r.isCorrect ? "text-success" : "text-foreground/50")}>
+                        <span className="font-semibold">Bạn chọn:</span> {r.userAnswer}
+                      </p>
+                      {!r.isCorrect && (
+                        <p className="text-sm text-success font-semibold mt-1">
+                          <span>Đáp án đúng:</span> {r.correctAnswer}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+            <div className="mt-8 flex justify-center">
+              <button onClick={onExit} className="bg-accent text-background px-12 py-4 rounded-2xl font-bold uppercase text-xs tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all">Thoát</button>
+            </div>
+          </div>
+        </div>
+      );
     }
-  };
 
-  if (isFinished) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center bg-background p-8 relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-success/5 rounded-full blur-[100px] pointer-events-none" />
-        
         <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-center relative z-10">
           <div className="w-24 h-24 bg-success/10 text-success rounded-[32px] flex items-center justify-center mx-auto mb-8 shadow-2xl border border-success/20">
             <Trophy size={48} />
           </div>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-accent mb-4 tracking-tighter leading-tight">{t('quiz_finished')}</h2>
-          <p className="text-xl text-foreground/40 mb-12 font-medium">Bạn đạt được <span className="text-accent font-extrabold">{score} / {quizQuestions.length}</span> câu chính xác!</p>
-          <button onClick={onExit} className="bg-accent text-background px-16 py-4 rounded-2xl font-bold uppercase text-xs tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all">{t('close_quiz')}</button>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-accent mb-4 tracking-tighter">{t('quiz_finished')}</h2>
+          <p className="text-xl text-foreground/40 mb-2 font-medium">
+            Bạn đạt <span className="text-accent font-extrabold">{score} / {quizQuestions.length}</span> câu đúng
+          </p>
+          <p className="text-lg text-foreground/30 mb-12">
+            Tỷ lệ: <span className={cn("font-bold", score / quizQuestions.length >= 0.8 ? "text-success" : "text-warning")}>
+              {Math.round((score / quizQuestions.length) * 100)}%
+            </span>
+          </p>
+          <div className="flex gap-4 justify-center">
+            <button onClick={() => setShowDetail(true)} className="bg-accent text-background px-10 py-4 rounded-2xl font-bold uppercase text-xs tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all">
+              Xem chi tiết
+            </button>
+            <button onClick={onExit} className="bg-foreground/10 text-accent px-10 py-4 rounded-2xl font-bold uppercase text-xs tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all border border-accent/20">
+              Thoát
+            </button>
+          </div>
         </motion.div>
       </div>
     );
   }
 
+  // --- No questions ---
   if (!currentQ) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center bg-background p-8">
-        <div className="text-center">
-          <BookOpen size={48} className="mx-auto text-foreground/10 mb-6" />
-          <h2 className="text-xl font-bold text-accent mb-6">Không có câu hỏi nào trong bộ đề này!</h2>
-          <button onClick={onExit} className="bg-accent text-background px-8 py-3 rounded-xl font-bold shadow-xl">Quay lại</button>
-        </div>
+        <BookOpen size={48} className="mx-auto text-foreground/10 mb-6" />
+        <h2 className="text-xl font-bold text-accent mb-6">Không có câu hỏi nào!</h2>
+        <button onClick={onExit} className="bg-accent text-background px-8 py-3 rounded-xl font-bold shadow-xl">Quay lại</button>
       </div>
     );
   }
 
+  // --- Quiz in progress ---
   return (
     <div className="flex flex-col flex-1 h-screen bg-background relative overflow-hidden">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-px bg-accent/20 z-20" />
-      
+      {/* Header */}
       <div className="h-20 px-10 flex items-center justify-between bg-card/40 backdrop-blur-2xl border-b border-border-notion relative z-20">
-        <div className="flex flex-col">
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent/40 mb-2">Câu hỏi {currentIdx + 1} / {quizQuestions.length}</span>
-          <div className="flex items-center gap-6">
-            <div className="w-64 h-1.5 bg-active-notion/50 rounded-full overflow-hidden border border-border-notion shadow-inner">
-              <motion.div 
-                className="h-full bg-accent transition-all duration-500" 
-                initial={{ width: 0 }}
-                animate={{ width: `${((currentIdx + 1)/quizQuestions.length)*100}%` }} 
-              />
-            </div>
+        <div className="flex flex-col gap-2">
+          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent/40">
+            Câu {currentIdx + 1} / {quizQuestions.length}
+            <span className="ml-3 text-foreground/30">• Đã trả lời: {totalAnswered}/{quizQuestions.length}</span>
+          </span>
+          <div className="w-64 h-1.5 bg-active-notion/50 rounded-full overflow-hidden border border-border-notion">
+            <motion.div className="h-full bg-accent transition-all duration-300" animate={{ width: `${((currentIdx + 1) / quizQuestions.length) * 100}%` }} />
           </div>
         </div>
-        <button onClick={onExit} className="p-3 text-foreground/20 hover:text-error hover:bg-error/5 rounded-2xl transition-all"><XCircle size={28} /></button>
+        <button onClick={onExit} className="p-3 text-foreground/20 hover:text-error hover:bg-error/5 rounded-2xl transition-all">
+          <XCircle size={28} />
+        </button>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center p-8 relative z-10">
-        <div className="w-full max-w-3xl glass p-10 md:p-16 rounded-[48px] border-border-notion/50 shadow-2xl">
-          <h3 className="text-2xl md:text-4xl font-extrabold text-accent leading-tight tracking-tight mb-16">{currentQ.text}</h3>
-          
+      {/* Question navigator dots */}
+      <div className="flex items-center gap-1.5 px-10 py-3 bg-card/20 border-b border-border-notion flex-wrap">
+        {quizQuestions.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentIdx(i)}
+            className={cn(
+              "w-7 h-7 rounded-lg text-[10px] font-bold transition-all border",
+              i === currentIdx
+                ? "bg-accent text-background border-accent scale-110"
+                : selectedAnswers[i] !== undefined
+                  ? "bg-success/20 text-success border-success/30"
+                  : "bg-active-notion/40 text-foreground/30 border-border-notion hover:border-accent/30"
+            )}
+          >
+            {i + 1}
+          </button>
+        ))}
+      </div>
+
+      {/* Question */}
+      <div className="flex-1 flex flex-col items-center justify-center p-8 relative z-10 overflow-y-auto">
+        <div className="w-full max-w-3xl glass p-10 md:p-14 rounded-[48px] border-border-notion/50 shadow-2xl">
+          <h3 className="text-2xl md:text-3xl font-extrabold text-accent leading-tight tracking-tight mb-10">
+            {currentQ.text}
+          </h3>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {currentQ.options.map((opt, i) => (
-              <button 
-                key={i}
-                disabled={isAnswered}
-                onClick={() => handleAnswer(i)}
-                className={cn(
-                  "w-full text-left p-6 rounded-2xl border-2 transition-all font-bold flex items-center justify-between group",
-                  !isAnswered ? 'border-border-notion bg-active-notion/10 hover:border-accent hover:bg-accent/5' : 
-                    i === currentQ.correctAnswer ? 'border-success bg-success/5 text-success' : 
-                    i === selectedIdx ? 'border-error bg-error/5 text-error' : 'border-border-notion opacity-40'
-                )}
-              >
-                <div className="flex items-center gap-4">
-                   <span className={cn(
-                     "w-8 h-8 rounded-lg flex items-center justify-center text-xs border transition-colors",
-                     !isAnswered ? "bg-active-notion border-border-notion text-accent/40 group-hover:bg-accent group-hover:text-background" : 
-                     i === currentQ.correctAnswer ? "bg-success text-background border-success" :
-                     i === selectedIdx ? "bg-error text-background border-error" : "bg-active-notion border-border-notion"
-                   )}>
-                     {String.fromCharCode(65 + i)}
-                   </span>
-                   <span>{opt}</span>
-                </div>
-                {isAnswered && i === currentQ.correctAnswer && <CheckCircle2 size={20} />}
-                {isAnswered && i === selectedIdx && i !== currentQ.correctAnswer && <XCircle size={20} />}
-              </button>
-            ))}
+            {currentQ.options.map((opt, i) => {
+              const isSelected = selectedAnswers[currentIdx] === i;
+              return (
+                <button
+                  key={i}
+                  onClick={() => setSelectedAnswers(prev => ({ ...prev, [currentIdx]: i }))}
+                  className={cn(
+                    "w-full text-left p-6 rounded-2xl border-2 transition-all font-bold flex items-center gap-4 group",
+                    isSelected
+                      ? "border-accent bg-accent/10 text-accent"
+                      : "border-border-notion bg-active-notion/10 hover:border-accent/50 hover:bg-accent/5"
+                  )}
+                >
+                  <span className={cn(
+                    "w-8 h-8 rounded-lg flex items-center justify-center text-xs border transition-colors flex-shrink-0",
+                    isSelected
+                      ? "bg-accent text-background border-accent"
+                      : "bg-active-notion border-border-notion text-accent/40 group-hover:bg-accent/10"
+                  )}>
+                    {String.fromCharCode(65 + i)}
+                  </span>
+                  <span>{opt}</span>
+                  {isSelected && <CheckCircle2 size={18} className="ml-auto flex-shrink-0" />}
+                </button>
+              );
+            })}
           </div>
 
-          <AnimatePresence>
-            {isAnswered && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-16 flex justify-end">
-                <button onClick={handleNext} className="bg-accent text-background px-12 py-4 rounded-2xl font-bold uppercase text-[10px] tracking-[0.2em] flex items-center gap-2 group shadow-xl hover:opacity-90 active:scale-95 transition-all">
-                  {currentIdx === quizQuestions.length - 1 ? "Xem kết quả" : "Câu tiếp theo"}
-                  <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </button>
-              </motion.div>
+          {/* Navigation */}
+          <div className="mt-10 flex items-center justify-between">
+            <button
+              onClick={() => setCurrentIdx(i => Math.max(0, i - 1))}
+              disabled={currentIdx === 0}
+              className="flex items-center gap-2 px-6 py-3 rounded-2xl font-bold text-sm border border-border-notion text-foreground/40 hover:text-accent hover:border-accent/30 disabled:opacity-20 transition-all"
+            >
+              <ChevronRight size={16} className="rotate-180" /> Câu trước
+            </button>
+
+            {currentIdx < quizQuestions.length - 1 ? (
+              <button
+                onClick={() => setCurrentIdx(i => i + 1)}
+                className="flex items-center gap-2 bg-accent text-background px-10 py-3 rounded-2xl font-bold text-sm shadow-xl hover:opacity-90 active:scale-95 transition-all"
+              >
+                Câu tiếp theo <ChevronRight size={16} />
+              </button>
+            ) : (
+              <button
+                onClick={handleSubmit}
+                disabled={!allAnswered}
+                className={cn(
+                  "flex items-center gap-2 px-10 py-3 rounded-2xl font-bold text-sm shadow-xl transition-all",
+                  allAnswered
+                    ? "bg-success text-background hover:opacity-90 active:scale-95"
+                    : "bg-foreground/10 text-foreground/30 cursor-not-allowed"
+                )}
+              >
+                <CheckCircle2 size={16} />
+                Nộp bài {!allAnswered && `(còn ${quizQuestions.length - totalAnswered} câu chưa trả lời)`}
+              </button>
             )}
-          </AnimatePresence>
+          </div>
+
+          {/* Submit button always visible when all answered */}
+          {allAnswered && currentIdx < quizQuestions.length - 1 && (
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={handleSubmit}
+                className="flex items-center gap-2 bg-success text-background px-8 py-2.5 rounded-xl font-bold text-sm shadow-xl hover:opacity-90 active:scale-95 transition-all"
+              >
+                <CheckCircle2 size={15} /> Nộp bài ngay
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

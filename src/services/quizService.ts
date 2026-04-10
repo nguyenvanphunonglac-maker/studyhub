@@ -23,12 +23,20 @@ export interface Question {
   subject: string;
 }
 
+export interface QuizAnswer {
+  questionText: string;
+  userAnswer: string;
+  correctAnswer: string;
+  isCorrect: boolean;
+}
+
 export interface QuizResult {
   id?: string;
   date: Timestamp;
   score: number;
   total: number;
   tags?: string[];
+  answers?: QuizAnswer[];
 }
 
 export interface QuizSet {
@@ -80,11 +88,12 @@ export const quizService = {
   },
 
   // Save quiz result
-  async saveResult(userId: string, score: number, total: number, tags?: string[]) {
+  async saveResult(userId: string, score: number, total: number, tags?: string[], answers?: QuizAnswer[]) {
     await addDoc(collection(db, RESULTS_PATH(userId)), {
       score,
       total,
       tags: tags || [],
+      answers: answers || [],
       date: Timestamp.now(),
     });
   },

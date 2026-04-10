@@ -14,6 +14,20 @@ import {
 import { db } from "@/lib/firebase";
 import { cleanObject } from "@/lib/utils";
 
+export interface MediaItem {
+  id: string;
+  type: 'image' | 'video';
+  url: string;
+  name: string;
+  size: number;
+  uploadedAt: Timestamp;
+}
+
+export interface MediaReference {
+  mediaId: string;
+  position: number; // Position in content (0 = start, 1 = after first paragraph, etc)
+}
+
 export interface Note {
   id?: string;
   title: string;
@@ -24,6 +38,8 @@ export interface Note {
   createdAt: Timestamp;
   updatedAt: Timestamp;
   thumbnail?: string;
+  media?: MediaItem[];
+  mediaReferences?: MediaReference[];
 }
 
 const COLLECTION_NAME = "notes";
@@ -73,6 +89,38 @@ export const noteService = {
         ...doc.data(),
       })) as Note[];
       callback(notes);
+    });
+  },
+
+  // Add media to note
+  async addMediaToNote(noteId: string, media: Omit<MediaItem, 'id' | 'uploadedAt'>) {
+    const docRef = doc(db, COLLECTION_NAME, noteId);
+    const newMedia: MediaItem = {
+      ...media,
+      id: `${Date.now()}-${Math.random()}`,
+      uploadedAt: Timestamp.now(),
+    };
+    
+    const note = await (await import('firebase/firestore')).getDoc(docRef);
+    const existingMedia = (note.data()?.media || []) as MediaItem[];
+    
+    await updateDoc(docRef, {
+      media: [...existingMedia, newMedia],
+      updatedAt: Timestamp.now(),
+    });
+    
+    return newMedia;
+  },
+
+  // Remove media from note
+  async removeMediaFromNote(noteId: string, mediaId: string) {
+    const docRef = doc(db, COLLECTION_NAME, noteId);
+    const note = await (await import('firebase/firestore')).getDoc(docRef);
+    const existingMedia = (note.data()?.media || []) as MediaItem[];
+    
+    await updateDoc(docRef, {
+      media: existingMedia.filter(m => m.id !== mediaId),
+      updatedAt: Timestamp.now(),
     });
   },
 };
