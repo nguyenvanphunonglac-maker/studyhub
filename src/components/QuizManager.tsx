@@ -11,6 +11,7 @@ import { subjects } from "@/context/LanguageContext";
 import { cn, cleanObject } from "@/lib/utils";
 import ConfirmModal from "@/components/ConfirmModal";
 import PageShell from "./PageShell";
+import SharedSessionButton from "@/components/session/SharedSessionButton";
 
 export default function QuizManager() {
   const { user } = useAuth();
@@ -36,6 +37,7 @@ export default function QuizManager() {
   const [selectedResult, setSelectedResult] = useState<QuizResult | null>(null);
   const [selectedSubject, setSelectedSubject] = useState<string>("");
   const [confirmDelete, setConfirmDelete] = useState<{ open: boolean; onConfirm: () => void }>({ open: false, onConfirm: () => {} });
+  const [shuffleEnabled, setShuffleEnabled] = useState(true);
 
   useEffect(() => {
     if (!user || !auth.currentUser) return;
@@ -132,7 +134,7 @@ export default function QuizManager() {
   };
 
   if (activeTab === "quiz") {
-    return <QuizActive questions={editingSet ? editingSet.questions : questions} onExit={() => { setActiveTab("sets"); setEditingSet(null); }} />;
+    return <QuizActive questions={editingSet ? editingSet.questions : questions} shuffle={shuffleEnabled} onExit={() => { setActiveTab("sets"); setEditingSet(null); }} />;
   }
 
   return (
@@ -212,6 +214,17 @@ export default function QuizManager() {
                 >
                   <Plus size={16} />
                   Thêm câu hỏi
+                </button>
+                <button
+                  onClick={() => setShuffleEnabled(s => !s)}
+                  className={cn(
+                    "flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold border transition-all",
+                    shuffleEnabled
+                      ? "bg-accent/10 text-accent border-accent/20"
+                      : "bg-active-notion/40 text-foreground/40 border-border-notion"
+                  )}
+                >
+                  🔀 {shuffleEnabled ? "Xáo trộn: Bật" : "Xáo trộn: Tắt"}
                 </button>
                 <button 
                   disabled={editingSet?.questions.length === 0}
@@ -397,6 +410,7 @@ export default function QuizManager() {
                             >
                               <BookOpen size={16} />
                             </button>
+                            <SharedSessionButton quizSet={set} />
                             <button
                               onClick={() => {
                                 setEditingSet(set);
@@ -578,11 +592,14 @@ export default function QuizManager() {
   );
 }
 
-function QuizActive({ questions, onExit }: { questions: Question[], onExit: () => void }) {
+function QuizActive({ questions, shuffle = true, onExit }: { questions: Question[], shuffle?: boolean, onExit: () => void }) {
   const { user } = useAuth();
   const { t } = useLanguage();
 
-  const [quizQuestions] = useState(() => [...questions].sort(() => Math.random() - 0.5).slice(0, 10));
+  const [quizQuestions] = useState(() => {
+    const pool = shuffle ? [...questions].sort(() => Math.random() - 0.5) : [...questions];
+    return pool.slice(0, 10);
+  });
   // selectedAnswers: map from question index -> selected option index (can change before submit)
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
   const [currentIdx, setCurrentIdx] = useState(0);

@@ -15,8 +15,10 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   streak: number;
+  needsOnboarding: boolean;
   loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
+  finishOnboarding: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,6 +27,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [streak, setStreak] = useState(0);
+  const [needsOnboarding, setNeedsOnboarding] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -37,13 +40,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             firebaseUser.photoURL
           );
           setStreak(newStreak);
+
+          // Check if onboarding is needed
+          const profile = await userService.getUserProfile(firebaseUser.uid);
+          if (!profile?.onboardingCompleted) {
+            setNeedsOnboarding(true);
+          }
         } else {
-          // Already logged in, just get current streak
           const profile = await userService.getUserProfile(firebaseUser.uid);
           if (profile) setStreak(profile.streak);
         }
       } else {
         setStreak(0);
+        setNeedsOnboarding(false);
       }
       setUser(firebaseUser);
       setLoading(false);
@@ -71,8 +80,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const finishOnboarding = () => setNeedsOnboarding(false);
+
   return (
-    <AuthContext.Provider value={{ user, loading, streak, loginWithGoogle, logout }}>
+    <AuthContext.Provider value={{ user, loading, streak, needsOnboarding, loginWithGoogle, logout, finishOnboarding }}>
       {children}
     </AuthContext.Provider>
   );

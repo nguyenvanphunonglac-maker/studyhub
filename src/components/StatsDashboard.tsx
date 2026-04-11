@@ -11,7 +11,7 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import PageShell from "./PageShell";
 
-export default function StatsDashboard() {
+export default function StatsDashboard({ onNavigate }: { onNavigate?: (view: string) => void }) {
   const { user, streak } = useAuth();
   const { t } = useLanguage();
   const [notes, setNotes] = useState<Note[]>([]);
@@ -138,7 +138,9 @@ export default function StatsDashboard() {
                 <p className="opacity-50 text-sm mb-8 leading-relaxed font-medium">Bạn đã sẵn sàng để chinh phục kiến thức mới chưa?</p>
               </div>
               
-              <button className="relative z-10 w-full bg-background text-accent py-4 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2">
+              <button
+                onClick={() => onNavigate?.("quiz")}
+                className="relative z-10 w-full bg-background text-accent py-4 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2">
                 {t('study_now')}
                 <ChevronRight size={14} />
               </button>

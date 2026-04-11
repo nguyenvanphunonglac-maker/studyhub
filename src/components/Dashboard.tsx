@@ -24,8 +24,9 @@ const Community = dynamic(() => import("./Community"), { loading: loadingGrid })
 const KanbanBoard = dynamic(() => import("./KanbanBoard"), { loading: loadingCard });
 const HabitTracker = dynamic(() => import("./HabitTracker"), { loading: loadingCard });
 const MindMap = dynamic(() => import("./MindMap"), { loading: loadingCard });
+const GoalTracker = dynamic(() => import("./GoalTracker"), { loading: loadingGrid });
 
-export type ViewType = "dashboard" | "notes" | "flashcards" | "quiz" | "pomodoro" | "community" | "kanban" | "habits" | "mindmap";
+export type ViewType = "dashboard" | "notes" | "flashcards" | "quiz" | "pomodoro" | "community" | "kanban" | "habits" | "mindmap" | "goals";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -100,7 +101,7 @@ export default function Dashboard() {
   const renderContent = () => {
     switch (view) {
       case "dashboard":
-        return <StatsDashboard />;
+        return <StatsDashboard onNavigate={(v) => setView(v as typeof view)} />;
       case "notes":
         return (
           <Editor
@@ -126,6 +127,8 @@ export default function Dashboard() {
         return <HabitTracker />;
       case "mindmap":
         return <MindMap />;
+      case "goals":
+        return <GoalTracker />;
       default:
         return null;
     }

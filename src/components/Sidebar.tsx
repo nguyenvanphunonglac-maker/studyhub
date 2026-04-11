@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { Note } from "@/services/noteService";
 import { 
@@ -17,7 +18,9 @@ import {
   Globe,
   LayoutList,
   Target,
-  GitBranch
+  GitBranch,
+  Trophy,
+  Users
 } from "lucide-react";
 import { ViewType } from "./Dashboard";
 import { useLanguage } from "@/context/LanguageContext";
@@ -88,6 +91,8 @@ export default function Sidebar({
         </div>
       </div>
 
+      {/* Scrollable middle section: nav + tags + recent notes */}
+      <div className="flex-1 overflow-y-auto min-h-0">
       {/* Navigation Views */}
       <div className="px-3 space-y-1">
         <SidebarItem 
@@ -141,6 +146,12 @@ export default function Sidebar({
           onClick={() => onViewChange("habits")}
         />
         <SidebarItem 
+          icon={<Trophy size={18} />} 
+          label="Mục tiêu" 
+          active={currentView === "goals"}
+          onClick={() => onViewChange("goals")}
+        />
+        <SidebarItem 
           icon={<GitBranch size={18} />} 
           label="Sơ đồ" 
           active={currentView === "mindmap"}
@@ -151,6 +162,12 @@ export default function Sidebar({
           label={t('pomodoro_title')} 
           active={currentView === "pomodoro"}
           onClick={() => onViewChange("pomodoro")}
+        />
+        <div className="h-px bg-border-notion my-4 mx-3" />
+        <SidebarItem
+          icon={<Users size={18} />}
+          label="Tham gia phòng thi"
+          onClick={() => window.location.href = "/join"}
         />
       </div>
 
@@ -189,7 +206,7 @@ export default function Sidebar({
       )}
 
       {/* Recent Note Context */}
-      <div className="mt-8 flex-1 overflow-y-auto px-3 pb-6">
+      <div className="mt-8 px-3 pb-6">
         <p className="px-3 text-[10px] font-black text-foreground/20 uppercase tracking-[2px] mb-3">
           {t('recent_notes')}
         </p>
@@ -210,15 +227,33 @@ export default function Sidebar({
         </div>
       </div>
 
+      </div> {/* end scrollable */}
+
       {/* Settings & Footer */}
-      <SettingsToggle />
+      <SettingsPanel />
+    </aside>
+  );
+}
+
+function SettingsPanel() {
+  const [open, setOpen] = useState(false);
+  const { t } = useLanguage();
+  return (
+    <>
+      {open && <SettingsToggle />}
       <div className="p-4 border-t border-border-notion">
-        <button className="w-full flex items-center gap-3 px-3 py-2 text-xs font-bold text-foreground/30 hover:text-accent transition-colors rounded-xl hover:bg-active-notion">
+        <button
+          onClick={() => setOpen(o => !o)}
+          className={cn(
+            "w-full flex items-center gap-3 px-3 py-2 text-xs font-bold transition-colors rounded-xl",
+            open ? "text-accent bg-active-notion" : "text-foreground/30 hover:text-accent hover:bg-active-notion"
+          )}
+        >
           <Settings size={16} />
           {t('settings')}
         </button>
       </div>
-    </aside>
+    </>
   );
 }
 

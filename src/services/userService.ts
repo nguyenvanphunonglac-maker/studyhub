@@ -16,6 +16,11 @@ export interface UserProfile {
   photoURL: string | null;
   lastLogin: Timestamp;
   streak: number;
+  // Onboarding fields
+  age?: number;
+  grade?: string;
+  subjects?: string[];
+  onboardingCompleted?: boolean;
 }
 
 export const userService = {
@@ -35,6 +40,17 @@ export const userService = {
       return docSnap.data() as UserProfile;
     }
     return null;
+  },
+
+  async completeOnboarding(uid: string, data: { displayName: string; age: number; grade: string; subjects: string[] }) {
+    const userRef = doc(db, "users", uid);
+    await updateDoc(userRef, {
+      displayName: data.displayName,
+      age: data.age,
+      grade: data.grade,
+      subjects: data.subjects,
+      onboardingCompleted: true,
+    });
   },
 
   async updateStreak(uid: string, displayName: string | null, email: string | null, photoURL: string | null) {

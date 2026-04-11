@@ -37,66 +37,89 @@
 
 /* --- THEMES --- */
 
+/* Dark — Zinc/Charcoal, inspired by Vercel/Raycast */
 [data-theme='dark'] {
   color-scheme: dark;
-  --bg: #0A0C10;
-  --fg: #E2E8F0;
-  --sidebar: #111418;
-  --card: #161B22;
-  --card-h: #1C2128;
-  --acc: #F8FAFC;
-  --acc-rgb: 248, 250, 252;
-  --brd: rgba(255, 255, 255, 0.08);
-  --act: rgba(255, 255, 255, 0.06);
-  --success: #34D399;
-  --warning: #FBBF24;
+  --bg: #141414;
+  --fg: #D4D4D4;        /* off-white, không chói */
+  --sidebar: #1A1A1A;
+  --card: #1F1F1F;
+  --card-h: #282828;
+  --acc: #D4D4D4;
+  --acc-rgb: 212, 212, 212;
+  --brd: rgba(255, 255, 255, 0.06);
+  --act: rgba(255, 255, 255, 0.04);
+  --success: #4ADE80;
+  --warning: #FCD34D;
   --error: #F87171;
 }
 
+/* Midnight — Slate Blue, inspired by Linear */
 [data-theme='midnight'] {
   color-scheme: dark;
-  --bg: #05070A;
-  --fg: #F1F5F9;
-  --sidebar: #0C0F16;
-  --card: #121721;
-  --card-h: #1A202E;
-  --acc: #38BDF8;
-  --acc-rgb: 56, 189, 248;
-  --brd: rgba(56, 189, 248, 0.1);
-  --act: rgba(56, 189, 248, 0.05);
-  --success: #38BDF8;
-  --warning: #F59E0B;
-  --error: #FB7185;
+  --bg: #0F1117;
+  --fg: #C9D1D9;        /* GitHub dark text */
+  --sidebar: #161B22;
+  --card: #1C2128;
+  --card-h: #22272E;
+  --acc: #79B8FF;       /* softer blue */
+  --acc-rgb: 121, 184, 255;
+  --brd: rgba(121, 184, 255, 0.1);
+  --act: rgba(121, 184, 255, 0.06);
+  --success: #56D364;
+  --warning: #E3B341;
+  --error: #FF7B72;
 }
 
-[data-theme='forest'] {
+/* Aurora — Muted Violet, inspired by Liveblocks */
+[data-theme='aurora'] {
   color-scheme: dark;
-  --bg: #0D1310;
-  --fg: #E0EBE2;
-  --sidebar: #141C18;
-  --card: #1D2622;
-  --card-h: #26312C;
-  --acc: #10B981;
-  --brd: rgba(16, 185, 129, 0.12);
-  --act: rgba(16, 185, 129, 0.08);
-  --success: #10B981;
-  --warning: #F59E0B;
-  --error: #EF4444;
+  --bg: #111018;
+  --fg: #C4B5FD;        /* muted lavender text */
+  --sidebar: #17151F;
+  --card: #1D1B2A;
+  --card-h: #242235;
+  --acc: #9D7FEA;       /* softer purple */
+  --acc-rgb: 157, 127, 234;
+  --brd: rgba(157, 127, 234, 0.12);
+  --act: rgba(157, 127, 234, 0.07);
+  --success: #34D399;
+  --warning: #FCD34D;
+  --error: #F87171;
 }
 
-[data-theme='sunset'] {
+/* Amber — Warm Dark, inspired by Bear/Obsidian */
+[data-theme='amber'] {
   color-scheme: dark;
-  --bg: #140F0E;
-  --fg: #FCEBE8;
-  --sidebar: #1C1514;
-  --card: #241A19;
-  --card-h: #2D2120;
-  --acc: #F43F5E;
-  --brd: rgba(244, 63, 94, 0.12);
-  --act: rgba(244, 63, 94, 0.08);
-  --success: #F43F5E;
-  --warning: #F59E0B;
-  --error: #EF4444;
+  --bg: #141209;
+  --fg: #E8D5A3;        /* warm parchment text */
+  --sidebar: #1A1810;
+  --card: #211E14;
+  --card-h: #2A261A;
+  --acc: #D4A017;       /* muted gold */
+  --acc-rgb: 212, 160, 23;
+  --brd: rgba(212, 160, 23, 0.12);
+  --act: rgba(212, 160, 23, 0.07);
+  --success: #4ADE80;
+  --warning: #D4A017;
+  --error: #F87171;
+}
+
+/* Rose — Muted Mauve, inspired by Craft */
+[data-theme='rose'] {
+  color-scheme: dark;
+  --bg: #130F11;
+  --fg: #E8C4D4;        /* muted rose text */
+  --sidebar: #1A1318;
+  --card: #211820;
+  --card-h: #2A1E28;
+  --acc: #D4789A;       /* muted rose */
+  --acc-rgb: 212, 120, 154;
+  --brd: rgba(212, 120, 154, 0.12);
+  --act: rgba(212, 120, 154, 0.07);
+  --success: #34D399;
+  --warning: #FCD34D;
+  --error: #F87171;
 }
 
 @layer base {
