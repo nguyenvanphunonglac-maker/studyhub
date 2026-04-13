@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { flashcardService, Flashcard, FlashcardSet } from "@/services/flashcardService";
-import { Plus, Trash2, BookOpen, Layers, History, Play, CheckCircle2, XCircle, ChevronRight, Search, FileUp, Edit3, Sparkles, Brain } from "lucide-react";
+import { Plus, Trash2, BookOpen, Layers, History, Play, CheckCircle2, XCircle, ChevronRight, Search, FileUp, Edit3, Sparkles, Brain, Puzzle, PenLine, LayoutGrid, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { subjects } from "@/context/LanguageContext";
@@ -12,13 +12,19 @@ import { auth } from "@/lib/firebase";
 import { cn } from "@/lib/utils";
 import ConfirmModal from "@/components/ConfirmModal";
 import PageShell from "./PageShell";
+import dynamic from "next/dynamic";
+
+const MatchGame   = dynamic(() => import("@/components/MatchGame"),   { ssr: false });
+const WriteMode   = dynamic(() => import("@/components/WriteMode"),   { ssr: false });
+const SortingGame = dynamic(() => import("@/components/SortingGame"), { ssr: false });
+const BlastGame   = dynamic(() => import("@/components/BlastGame"),   { ssr: false });
 
 export default function FlashcardManager() {
   const { user } = useAuth();
   const { t } = useLanguage();
   const [sets, setSets] = useState<FlashcardSet[]>([]);
   const [editingSet, setEditingSet] = useState<FlashcardSet | null>(null);
-  const [activeView, setActiveView] = useState<"list" | "review">("list");
+  const [activeView, setActiveView] = useState<"list" | "review" | "match" | "write" | "sort" | "blast">("list");
   const [isCreatingSet, setIsCreatingSet] = useState(false);
   const [isAddingCard, setIsAddingCard] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<{ open: boolean; onConfirm: () => void }>({ open: false, onConfirm: () => {} });
@@ -115,6 +121,19 @@ export default function FlashcardManager() {
     return <FlashcardReview set={editingSet} onExit={() => setActiveView("list")} />;
   }
 
+  if (activeView === "match" && editingSet) {
+    return <PageShell><div className="max-w-3xl mx-auto"><MatchGame set={editingSet} onExit={() => setActiveView("list")} /></div></PageShell>;
+  }
+  if (activeView === "write" && editingSet) {
+    return <PageShell><WriteMode set={editingSet} onExit={() => setActiveView("list")} /></PageShell>;
+  }
+  if (activeView === "sort" && editingSet) {
+    return <PageShell><SortingGame set={editingSet} onExit={() => setActiveView("list")} /></PageShell>;
+  }
+  if (activeView === "blast" && editingSet) {
+    return <PageShell><BlastGame set={editingSet} onExit={() => setActiveView("list")} /></PageShell>;
+  }
+
   return (
     <PageShell>
       <ConfirmModal
@@ -136,13 +155,28 @@ export default function FlashcardManager() {
               </h1>
             </div>
             {editingSet && editingSet.cards.length > 0 && (
-              <button 
-                onClick={() => setActiveView("review")}
-                className="flex items-center justify-center gap-3 bg-accent text-background px-8 py-4 rounded-2xl text-xs font-bold uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all"
-              >
-                <Play size={16} fill="currentColor" />
-                Ôn luyện ngay
-              </button>
+              <div className="flex flex-wrap gap-2">
+                <button onClick={() => setActiveView("write")}
+                  className="flex items-center gap-2 bg-accent/10 text-accent border border-accent/20 px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-accent hover:text-background transition-all">
+                  <PenLine size={14} /> Viết
+                </button>
+                <button onClick={() => setActiveView("match")}
+                  className="flex items-center gap-2 bg-warning/10 text-warning border border-warning/20 px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-warning hover:text-background transition-all">
+                  <Puzzle size={14} /> Match
+                </button>
+                <button onClick={() => setActiveView("sort")}
+                  className="flex items-center gap-2 bg-purple-500/10 text-purple-400 border border-purple-500/20 px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-purple-500 hover:text-background transition-all">
+                  <LayoutGrid size={14} /> Khối hộp
+                </button>
+                <button onClick={() => setActiveView("blast")}
+                  className="flex items-center gap-2 bg-error/10 text-error border border-error/20 px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-error hover:text-background transition-all">
+                  <Zap size={14} /> Blast
+                </button>
+                <button onClick={() => setActiveView("review")}
+                  className="flex items-center gap-3 bg-accent text-background px-6 py-2.5 rounded-xl text-xs font-bold shadow-xl hover:scale-105 active:scale-95 transition-all">
+                  <Play size={14} fill="currentColor" /> Ôn luyện
+                </button>
+              </div>
             )}
           </div>
           
@@ -349,8 +383,25 @@ export default function FlashcardManager() {
                         <button 
                           onClick={(e) => { e.stopPropagation(); setEditingSet(set); setActiveView("review"); }}
                           className="p-3 bg-success/10 text-success rounded-xl border border-success/10 hover:bg-success hover:text-background transition-all"
+                          title="Ôn luyện"
                         >
                           <Play size={16} fill="currentColor" />
+                        </button>
+                        <button onClick={(e) => { e.stopPropagation(); setEditingSet(set); setActiveView("write"); }}
+                          className="p-3 bg-accent/10 text-accent rounded-xl border border-accent/10 hover:bg-accent hover:text-background transition-all" title="Write">
+                          <PenLine size={16} />
+                        </button>
+                        <button onClick={(e) => { e.stopPropagation(); setEditingSet(set); setActiveView("match"); }}
+                          className="p-3 bg-warning/10 text-warning rounded-xl border border-warning/10 hover:bg-warning hover:text-background transition-all" title="Match">
+                          <Puzzle size={16} />
+                        </button>
+                        <button onClick={(e) => { e.stopPropagation(); setEditingSet(set); setActiveView("sort"); }}
+                          className="p-3 bg-purple-500/10 text-purple-400 rounded-xl border border-purple-500/10 hover:bg-purple-500 hover:text-background transition-all" title="Khối hộp">
+                          <LayoutGrid size={16} />
+                        </button>
+                        <button onClick={(e) => { e.stopPropagation(); setEditingSet(set); setActiveView("blast"); }}
+                          className="p-3 bg-error/10 text-error rounded-xl border border-error/10 hover:bg-error hover:text-background transition-all" title="Blast">
+                          <Zap size={16} />
                         </button>
                         <button 
                           onClick={(e) => { e.stopPropagation(); setConfirmDelete({

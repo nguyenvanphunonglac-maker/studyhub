@@ -45,7 +45,7 @@ interface CardResult {
 }
 
 export default function WriteMode({ set, onExit }: WriteModeProps) {
-  const cards = set.cards;
+  const cards = set.cards.filter(c => c.front && c.back);
   const [idx, setIdx] = useState(0);
   const [input, setInput] = useState("");
   const [answerState, setAnswerState] = useState<AnswerState>("idle");
@@ -56,6 +56,15 @@ export default function WriteMode({ set, onExit }: WriteModeProps) {
 
   const card = cards[idx];
   const isLast = idx === cards.length - 1;
+
+  if (cards.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[40vh] gap-4 text-center p-8">
+        <p className="text-foreground/40 font-bold">Bộ thẻ này chưa có thẻ nào hợp lệ.</p>
+        <button onClick={onExit} className="px-6 py-3 rounded-2xl bg-accent text-background font-bold text-sm">Thoát</button>
+      </div>
+    );
+  }
 
   useEffect(() => {
     inputRef.current?.focus();
