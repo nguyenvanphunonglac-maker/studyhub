@@ -10,16 +10,9 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import type { UserMediaItem } from "@/types/media";
 
-export interface UserMediaItem {
-  id?: string;
-  userId: string;
-  type: 'image' | 'video';
-  url: string;
-  name: string;
-  size: number;
-  uploadedAt: Timestamp;
-}
+export type { UserMediaItem } from "@/types/media";
 
 const COL = "usermedia";
 

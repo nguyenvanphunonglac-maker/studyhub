@@ -1,13 +1,8 @@
 import { collection, addDoc, query, where, onSnapshot, Timestamp, orderBy, limit } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import type { PomodoroSession } from "@/types/pomodoro";
 
-export interface PomodoroSession {
-  id?: string;
-  userId: string;
-  mode: "focus" | "short" | "long";
-  duration: number; // seconds
-  completedAt: Timestamp;
-}
+export type { PomodoroSession } from "@/types/pomodoro";
 
 const COLLECTION = "pomodoro_sessions";
 

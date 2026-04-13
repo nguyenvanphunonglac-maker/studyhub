@@ -3,21 +3,21 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { flashcardService, Flashcard, FlashcardSet } from "@/services/flashcardService";
-import { Plus, Trash2, BookOpen, Layers, History, Play, CheckCircle2, XCircle, ChevronRight, Search, FileUp, Edit3, Sparkles, Brain, Puzzle, PenLine, LayoutGrid, Zap } from "lucide-react";
+import { Plus, Trash2, BookOpen, Layers, History, Play, CheckCircle2, XCircle, ChevronRight, Search, FileUp, Edit3, Sparkles, Brain, Puzzle, PenLine, LayoutGrid, Zap, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { subjects } from "@/context/LanguageContext";
 import { Timestamp } from "firebase/firestore";
 import { auth } from "@/lib/firebase";
 import { cn } from "@/lib/utils";
-import ConfirmModal from "@/components/ConfirmModal";
-import PageShell from "./PageShell";
+import ConfirmModal from "@/components/ui/ConfirmModal";
+import PageShell from "../layout/PageShell";
 import dynamic from "next/dynamic";
 
-const MatchGame   = dynamic(() => import("@/components/MatchGame"),   { ssr: false });
-const WriteMode   = dynamic(() => import("@/components/WriteMode"),   { ssr: false });
-const SortingGame = dynamic(() => import("@/components/SortingGame"), { ssr: false });
-const BlastGame   = dynamic(() => import("@/components/BlastGame"),   { ssr: false });
+const MatchGame   = dynamic(() => import("@/components/flashcards/MatchGame"),   { ssr: false });
+const WriteMode   = dynamic(() => import("@/components/flashcards/WriteMode"),   { ssr: false });
+const SortingGame = dynamic(() => import("@/components/flashcards/SortingGame"), { ssr: false });
+const BlastGame   = dynamic(() => import("@/components/flashcards/BlastGame"),   { ssr: false });
 
 export default function FlashcardManager() {
   const { user } = useAuth();
@@ -117,6 +117,40 @@ export default function FlashcardManager() {
     setIsAddingCard(false);
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user || !editingSet) return;
+    e.target.value = "";
+    import("papaparse").then(({ default: Papa }) => {
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: async (results) => {
+          const parsed = (results.data as any[])
+            .map((row) => ({
+              front: row.front || row.question || row["mặt trước"] || "",
+              back: row.back || row.answer || row["mặt sau"] || "",
+            }))
+            .filter((c) => c.front && c.back)
+            .map((c): Flashcard => ({
+              front: c.front,
+              back: c.back,
+              easeFactor: 2.5,
+              interval: 0,
+              repetitions: 0,
+              nextReview: Timestamp.now(),
+              userId: user.uid,
+              tags: [],
+              subject: editingSet.subject || "Khác",
+            }));
+          if (parsed.length === 0) return alert("Không tìm thấy thẻ hợp lệ. CSV cần có cột front/back hoặc question/answer.");
+          const updated = [...editingSet.cards, ...parsed];
+          await flashcardService.updateCardsInSet(user.uid, editingSet.id!, updated);
+        },
+      });
+    });
+  };
+
   if (activeView === "review" && editingSet) {
     return <FlashcardReview set={editingSet} onExit={() => setActiveView("list")} />;
   }
@@ -199,13 +233,20 @@ export default function FlashcardManager() {
               <h2 className="text-xs font-bold text-foreground/30 uppercase tracking-[0.2em]">
                 Thẻ đang có ({editingSet.cards.length})
               </h2>
-              <button 
-                onClick={() => setIsAddingCard(true)}
-                className="flex items-center gap-2 bg-active-notion text-accent px-5 py-2.5 rounded-xl text-xs font-bold border border-border-notion hover:bg-accent/5 transition-all"
-              >
-                <Plus size={18} />
-                Thêm thẻ mới
-              </button>
+              <div className="flex gap-3">
+                <label className="flex items-center gap-2 bg-active-notion text-accent px-5 py-2.5 rounded-xl text-xs font-bold border border-border-notion hover:bg-accent/5 transition-all cursor-pointer">
+                  <FileUp size={16} />
+                  Import CSV
+                  <input type="file" accept=".csv" className="hidden" onChange={handleFileUpload} />
+                </label>
+                <button 
+                  onClick={() => setIsAddingCard(true)}
+                  className="flex items-center gap-2 bg-active-notion text-accent px-5 py-2.5 rounded-xl text-xs font-bold border border-border-notion hover:bg-accent/5 transition-all"
+                >
+                  <Plus size={18} />
+                  Thêm thẻ mới
+                </button>
+              </div>
             </div>
 
             {isAddingCard && (

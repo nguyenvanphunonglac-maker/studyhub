@@ -8,20 +8,9 @@ import {
   Timestamp,
   onSnapshot
 } from "firebase/firestore";
+import type { UserProfile } from "@/types/user";
 
-export interface UserProfile {
-  uid: string;
-  displayName: string | null;
-  email: string | null;
-  photoURL: string | null;
-  lastLogin: Timestamp;
-  streak: number;
-  // Onboarding fields
-  age?: number;
-  grade?: string;
-  subjects?: string[];
-  onboardingCompleted?: boolean;
-}
+export type { UserProfile } from "@/types/user";
 
 export const userService = {
   subscribeToProfile(uid: string, callback: (profile: UserProfile) => void) {

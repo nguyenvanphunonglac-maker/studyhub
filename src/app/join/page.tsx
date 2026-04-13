@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/context/AuthContext";
 import { Loader2 } from "lucide-react";
-import Login from "@/components/Login";
+import Login from "@/components/auth/Login";
 import JoinSessionForm from "@/components/session/JoinSessionForm";
 
 export default function JoinPage() {

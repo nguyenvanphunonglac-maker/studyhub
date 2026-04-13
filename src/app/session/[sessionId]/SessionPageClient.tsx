@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { subscribeToSession, subscribeToParticipants } from "@/services/sessionService";
 import { Session, ParticipantRecord } from "@/types/session";
 import { Loader2 } from "lucide-react";
-import Login from "@/components/Login";
+import Login from "@/components/auth/Login";
 import HostSessionView from "@/components/session/HostSessionView";
 import ParticipantSessionView from "@/components/session/ParticipantSessionView";
 

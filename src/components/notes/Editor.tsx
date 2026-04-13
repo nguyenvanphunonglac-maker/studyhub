@@ -8,7 +8,7 @@ import { Book, Trash2, X, Hash, Plus, FileText, ChevronRight, Sparkles, Layout, 
 import { useLanguage } from "@/context/LanguageContext";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import ConfirmModal from "@/components/ConfirmModal";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 import { Timestamp } from "firebase/firestore";
 import { githubUploadService } from "@/services/githubUploadService";
 import { useAuth } from "@/context/AuthContext";

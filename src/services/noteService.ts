@@ -13,34 +13,10 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { cleanObject } from "@/lib/utils";
+import type { Note, MediaItem } from "@/types/note";
 
-export interface MediaItem {
-  id: string;
-  type: 'image' | 'video';
-  url: string;
-  name: string;
-  size: number;
-  uploadedAt: Timestamp;
-}
-
-export interface MediaReference {
-  mediaId: string;
-  position: number; // Position in content (0 = start, 1 = after first paragraph, etc)
-}
-
-export interface Note {
-  id?: string;
-  title: string;
-  content: string;
-  userId: string;
-  tags: string[];
-  subject: string;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-  thumbnail?: string;
-  media?: MediaItem[];
-  mediaReferences?: MediaReference[];
-}
+export type { Note, MediaItem } from "@/types/note";
+export type { MediaReference } from "@/types/note";
 
 const COLLECTION_NAME = "notes";
 

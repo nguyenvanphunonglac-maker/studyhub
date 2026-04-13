@@ -7,7 +7,7 @@ import { Play, Pause, RotateCcw, Coffee, BookOpen, Timer } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { cn } from "@/lib/utils";
-import PageShell from "./PageShell";
+import PageShell from "../layout/PageShell";
 
 const MODES = {
   focus: 25 * 60,

@@ -13,45 +13,9 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { cleanObject } from "@/lib/utils";
+import type { Question, QuizAnswer, QuizResult, QuizSet } from "@/types/quiz";
 
-export interface Question {
-  id?: string;
-  text: string;
-  options: string[];
-  correctAnswer: number; // Index
-  tags: string[];
-  subject: string;
-  imageUrl?: string; // Optional image for the question
-}
-
-export interface QuizAnswer {
-  questionText: string;
-  userAnswer: string;
-  correctAnswer: string;
-  isCorrect: boolean;
-}
-
-export interface QuizResult {
-  id?: string;
-  date: Timestamp;
-  score: number;
-  total: number;
-  tags?: string[];
-  answers?: QuizAnswer[];
-}
-
-export interface QuizSet {
-  id?: string;
-  title: string;
-  description: string;
-  questions: Question[];
-  userId: string;
-  authorName?: string;
-  isPublic?: boolean;
-  subject: string;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-}
+export type { Question, QuizAnswer, QuizResult, QuizSet } from "@/types/quiz";
 
 const QUESTIONS_PATH = (userId: string) => `users/${userId}/questions`;
 const RESULTS_PATH = (userId: string) => `users/${userId}/results`;

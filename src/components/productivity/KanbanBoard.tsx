@@ -7,7 +7,7 @@ import { Plus, MoreHorizontal, Trash2, ChevronRight, Calendar, AlertCircle, Chec
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { cn } from "@/lib/utils";
-import PageShell from "./PageShell";
+import PageShell from "../layout/PageShell";
 
 export default function KanbanBoard() {
   const { user } = useAuth();

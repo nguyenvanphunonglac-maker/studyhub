@@ -10,8 +10,8 @@ import { Target, Plus, Trash2, CheckCircle2, Clock, TrendingUp, X, ChevronRight,
 import { Timestamp } from "firebase/firestore";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import PageShell from "./PageShell";
-import ConfirmModal from "./ConfirmModal";
+import PageShell from "../layout/PageShell";
+import ConfirmModal from "../ui/ConfirmModal";
 
 function cn(...inputs: ClassValue[]) { return twMerge(clsx(inputs)); }
 

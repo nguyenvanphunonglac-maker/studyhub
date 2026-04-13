@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { ViewType } from "./Dashboard";
 import { useLanguage } from "@/context/LanguageContext";
-import SettingsToggle from "./SettingsToggle";
+import SettingsToggle from "@/components/ui/SettingsToggle";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 

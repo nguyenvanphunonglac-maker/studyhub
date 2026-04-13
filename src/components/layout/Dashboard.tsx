@@ -8,23 +8,23 @@ import { Loader2, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { subjects } from "@/context/LanguageContext";
 
-import { CardListSkeleton, GridSkeleton, StatsSkeleton } from "@/components/Skeleton";
+import { CardListSkeleton, GridSkeleton, StatsSkeleton } from "@/components/ui/Skeleton";
 
 const loadingCard = () => <div className="p-8"><CardListSkeleton /></div>;
 const loadingGrid = () => <div className="p-8"><GridSkeleton /></div>;
 const loadingStats = () => <StatsSkeleton />;
 
-const Sidebar = dynamic(() => import("./Sidebar"));
-const Editor = dynamic(() => import("./Editor"), { loading: loadingCard });
-const FlashcardManager = dynamic(() => import("./FlashcardManager"), { loading: loadingGrid });
-const QuizManager = dynamic(() => import("./QuizManager"), { loading: loadingGrid });
-const Pomodoro = dynamic(() => import("./Pomodoro"), { loading: loadingCard });
-const StatsDashboard = dynamic(() => import("./StatsDashboard"), { loading: loadingStats });
-const Community = dynamic(() => import("./Community"), { loading: loadingGrid });
-const KanbanBoard = dynamic(() => import("./KanbanBoard"), { loading: loadingCard });
-const HabitTracker = dynamic(() => import("./HabitTracker"), { loading: loadingCard });
-const MindMap = dynamic(() => import("./MindMap"), { loading: loadingCard });
-const GoalTracker = dynamic(() => import("./GoalTracker"), { loading: loadingGrid });
+const Sidebar = dynamic(() => import("@/components/layout/Sidebar"));
+const Editor = dynamic(() => import("@/components/notes/Editor"), { loading: loadingCard });
+const FlashcardManager = dynamic(() => import("@/components/flashcards/FlashcardManager"), { loading: loadingGrid });
+const QuizManager = dynamic(() => import("@/components/quiz/QuizManager"), { loading: loadingGrid });
+const Pomodoro = dynamic(() => import("@/components/productivity/Pomodoro"), { loading: loadingCard });
+const StatsDashboard = dynamic(() => import("@/components/dashboard/StatsDashboard"), { loading: loadingStats });
+const Community = dynamic(() => import("@/components/community/Community"), { loading: loadingGrid });
+const KanbanBoard = dynamic(() => import("@/components/productivity/KanbanBoard"), { loading: loadingCard });
+const HabitTracker = dynamic(() => import("@/components/productivity/HabitTracker"), { loading: loadingCard });
+const MindMap = dynamic(() => import("@/components/mindmap/MindMap"), { loading: loadingCard });
+const GoalTracker = dynamic(() => import("@/components/productivity/GoalTracker"), { loading: loadingGrid });
 
 export type ViewType = "dashboard" | "notes" | "flashcards" | "quiz" | "pomodoro" | "community" | "kanban" | "habits" | "mindmap" | "goals";
 

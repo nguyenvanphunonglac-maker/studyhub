@@ -6,7 +6,7 @@ import { LanguageProvider } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
 import dynamic from "next/dynamic";
 
-const OnboardingModal = dynamic(() => import("@/components/OnboardingModal"), { ssr: false });
+const OnboardingModal = dynamic(() => import("@/components/auth/OnboardingModal"), { ssr: false });
 
 function OnboardingGate({ children }: { children: React.ReactNode }) {
   const { needsOnboarding, user } = useAuth();

@@ -17,28 +17,9 @@ import {
   Timestamp
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import type { CommunityPost, CommunityComment } from "@/types/community";
 
-export interface CommunityPost {
-  id?: string;
-  userId: string;
-  userName: string;
-  userPhoto?: string;
-  content: string;
-  images?: string[];
-  createdAt: any;
-  likes: number;
-  commentCount: number;
-  likedBy?: string[]; // Array of user IDs who liked the post
-}
-
-export interface CommunityComment {
-  id?: string;
-  userId: string;
-  userName: string;
-  userPhoto?: string;
-  content: string;
-  createdAt: any;
-}
+export type { CommunityPost, CommunityComment } from "@/types/community";
 
 export const communityService = {
   createPost: async (userId: string, userName: string, content: string, images: string[]) => {

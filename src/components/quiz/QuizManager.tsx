@@ -9,8 +9,8 @@ import { useLanguage } from "@/context/LanguageContext";
 import { auth } from "@/lib/firebase";
 import { subjects } from "@/context/LanguageContext";
 import { cn, cleanObject } from "@/lib/utils";
-import ConfirmModal from "@/components/ConfirmModal";
-import PageShell from "./PageShell";
+import ConfirmModal from "@/components/ui/ConfirmModal";
+import PageShell from "../layout/PageShell";
 import SharedSessionButton from "@/components/session/SharedSessionButton";
 import { githubUploadService } from "@/services/githubUploadService";
 

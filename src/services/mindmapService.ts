@@ -10,16 +10,9 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import type { MindMapData } from "@/types/mindmap";
 
-export interface MindMapData {
-  id?: string;
-  title: string;
-  userId: string;
-  nodes: any[];
-  edges: any[];
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-}
+export type { MindMapData } from "@/types/mindmap";
 
 const MINDMAPS_PATH = (userId: string) => `users/${userId}/mindmaps`;
 
@@ -32,18 +25,9 @@ export const mindmapService = {
       nodes: [
         { 
           id: '1', 
-          type: 'input', 
-          data: { label: title || 'Chủ đề chính' }, 
+          type: 'editable',
+          data: { label: title || 'Chủ đề chính', isRoot: true }, 
           position: { x: 250, y: 250 },
-          style: { 
-            background: '#2D2A26', 
-            color: '#fff', 
-            borderRadius: '20px', 
-            padding: '20px',
-            fontWeight: 'bold',
-            border: 'none',
-            fontSize: '16px'
-          }
         }
       ],
       edges: [],

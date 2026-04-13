@@ -28,7 +28,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { cn } from "@/lib/utils";
-import PageShell from "./PageShell";
+import PageShell from "../layout/PageShell";
 
 export default function Community() {
   const { user } = useAuth();

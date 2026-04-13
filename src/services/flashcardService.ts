@@ -11,32 +11,9 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { cleanObject } from "@/lib/utils";
+import type { Flashcard, FlashcardSet } from "@/types/flashcard";
 
-export interface Flashcard {
-  id?: string;
-  front: string;
-  back: string;
-  easeFactor: number; // Default 2.5
-  interval: number; // Days, Default 0
-  repetitions: number; // Default 0
-  nextReview: Timestamp;
-  userId: string;
-  tags: string[];
-  subject: string;
-}
-
-export interface FlashcardSet {
-  id?: string;
-  title: string;
-  description: string;
-  cards: Flashcard[];
-  userId: string;
-  authorName?: string;
-  isPublic?: boolean;
-  subject: string;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-}
+export type { Flashcard, FlashcardSet } from "@/types/flashcard";
 
 const SETS_PATH = (userId: string) => `users/${userId}/flashcardSets`;
 

@@ -9,7 +9,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { BookText, Brain, GraduationCap, Zap, ChevronRight, ArrowUpRight, Clock, Star, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import PageShell from "./PageShell";
+import PageShell from "../layout/PageShell";
 
 export default function StatsDashboard({ onNavigate }: { onNavigate?: (view: string) => void }) {
   const { user, streak } = useAuth();

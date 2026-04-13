@@ -12,24 +12,9 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import type { Habit, HabitLog } from "@/types/habit";
 
-export interface Habit {
-  id?: string;
-  name: string;
-  color: string;
-  icon: string;
-  userId: string;
-  createdAt: Timestamp;
-}
-
-export interface HabitLog {
-  id?: string;
-  habitId: string;
-  userId: string;
-  date: string; // Format: YYYY-MM-DD
-  completed: boolean;
-  createdAt: Timestamp;
-}
+export type { Habit, HabitLog } from "@/types/habit";
 
 const HABITS_PATH = (userId: string) => `users/${userId}/habits`;
 const LOGS_PATH = (userId: string) => `users/${userId}/habitLogs`;

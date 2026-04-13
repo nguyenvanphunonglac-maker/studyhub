@@ -7,7 +7,7 @@ import { Plus, Trash2, Check, Target, Flame, Calendar, Trophy, X } from "lucide-
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { cn } from "@/lib/utils";
-import PageShell from "./PageShell";
+import PageShell from "../layout/PageShell";
 
 const COLORS = ["#10B981", "#3B82F6", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899"];
 

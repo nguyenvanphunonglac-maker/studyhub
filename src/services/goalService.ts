@@ -3,27 +3,9 @@ import {
   doc, query, where, onSnapshot, Timestamp, orderBy,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import type { Goal, GoalType, GoalPeriod, GoalStatus } from "@/types/goal";
 
-export type GoalType = 'quiz_score' | 'quiz_count' | 'study_days' | 'flashcard_count' | 'custom';
-export type GoalPeriod = 'daily' | 'weekly' | 'monthly' | 'custom';
-export type GoalStatus = 'active' | 'completed' | 'failed';
-
-export interface Goal {
-  id?: string;
-  userId: string;
-  title: string;
-  description?: string;
-  type: GoalType;
-  period: GoalPeriod;
-  target: number;        // e.g. 80 (for 80%), 10 (for 10 quizzes)
-  current: number;       // current progress
-  unit: string;          // e.g. "%", "bài", "ngày"
-  status: GoalStatus;
-  startDate: Timestamp;
-  endDate: Timestamp;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-}
+export type { Goal, GoalType, GoalPeriod, GoalStatus } from "@/types/goal";
 
 const COL = (userId: string) => `users/${userId}/goals`;
 
