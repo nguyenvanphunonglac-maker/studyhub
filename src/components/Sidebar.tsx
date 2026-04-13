@@ -129,31 +129,31 @@ export default function Sidebar({
         />
         <SidebarItem 
           icon={<Globe size={18} />} 
-          label="Cộng đồng" 
+          label={t('community')} 
           active={currentView === "community"}
           onClick={() => onViewChange("community")}
         />
         <SidebarItem 
           icon={<LayoutList size={18} />} 
-          label="Nhiệm vụ" 
+          label={t('kanban')} 
           active={currentView === "kanban"}
           onClick={() => onViewChange("kanban")}
         />
         <SidebarItem 
           icon={<Target size={18} />} 
-          label="Thói quen" 
+          label={t('habits')} 
           active={currentView === "habits"}
           onClick={() => onViewChange("habits")}
         />
         <SidebarItem 
           icon={<Trophy size={18} />} 
-          label="Mục tiêu" 
+          label={t('goals')} 
           active={currentView === "goals"}
           onClick={() => onViewChange("goals")}
         />
         <SidebarItem 
           icon={<GitBranch size={18} />} 
-          label="Sơ đồ" 
+          label={t('mindmap')} 
           active={currentView === "mindmap"}
           onClick={() => onViewChange("mindmap")}
         />
@@ -166,7 +166,7 @@ export default function Sidebar({
         <div className="h-px bg-border-notion my-4 mx-3" />
         <SidebarItem
           icon={<Users size={18} />}
-          label="Tham gia phòng thi"
+          label={t('join_room')}
           onClick={() => window.location.href = "/join"}
         />
       </div>

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, memo } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { quizService, Question, QuizResult, QuizSet, QuizAnswer } from "@/services/quizService";
-import { Plus, Trash2, FileUp, Play, CheckCircle2, XCircle, History, ChevronRight, LayoutList, BookOpen, Sparkles, Trophy } from "lucide-react";
+import { Plus, Trash2, FileUp, Play, CheckCircle2, XCircle, History, ChevronRight, LayoutList, BookOpen, Sparkles, Trophy, Image as ImageIcon, X, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { auth } from "@/lib/firebase";
@@ -12,6 +12,7 @@ import { cn, cleanObject } from "@/lib/utils";
 import ConfirmModal from "@/components/ConfirmModal";
 import PageShell from "./PageShell";
 import SharedSessionButton from "@/components/session/SharedSessionButton";
+import { githubUploadService } from "@/services/githubUploadService";
 
 export default function QuizManager() {
   const { user } = useAuth();
@@ -27,6 +28,8 @@ export default function QuizManager() {
   const [newText, setNewText] = useState("");
   const [newOptions, setNewOptions] = useState(["", "", "", ""]);
   const [newCorrect, setNewCorrect] = useState(0);
+  const [newImageUrl, setNewImageUrl] = useState("");
+  const [imageUploading, setImageUploading] = useState(false);
   const [editingQuestionIdx, setEditingQuestionIdx] = useState<number | null>(null);
 
   const [isCreatingSet, setIsCreatingSet] = useState(false);
@@ -77,7 +80,8 @@ export default function QuizManager() {
       options: newOptions,
       correctAnswer: newCorrect,
       tags: [],
-      subject: editingSet.subject || "Khác"
+      subject: editingSet.subject || "Khác",
+      ...(newImageUrl ? { imageUrl: newImageUrl } : {}),
     };
 
     if (editingQuestionIdx !== null) {
@@ -106,8 +110,23 @@ export default function QuizManager() {
     setNewText("");
     setNewOptions(["", "", "", ""]);
     setNewCorrect(0);
+    setNewImageUrl("");
     setEditingQuestionIdx(null);
     setIsAdding(false);
+  };
+
+  const handleQuestionImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImageUploading(true);
+    try {
+      const url = await githubUploadService.uploadMedia(file);
+      setNewImageUrl(url);
+    } catch (err) {
+      console.error("Image upload failed:", err);
+    } finally {
+      setImageUploading(false);
+    }
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,7 +171,7 @@ export default function QuizManager() {
                 <span>{t('quizzes_title')}</span>
              </div>
              <h1 className="text-3xl md:text-5xl font-extrabold text-accent tracking-tighter leading-tight">
-               {editingSet ? editingSet.title : "Kiểm tra kiến thức"}
+               {editingSet ? editingSet.title : t('check_knowledge')}
              </h1>
           </div>
           
@@ -162,12 +181,12 @@ export default function QuizManager() {
                 onClick={() => setEditingSet(null)}
                 className="flex items-center gap-2 text-foreground/40 hover:text-accent font-bold uppercase text-[10px] tracking-widest transition-all group"
               >
-                <ChevronRight size={14} className="rotate-180 group-hover:-translate-x-1 transition-transform" /> Quay lại danh sách bộ đề
+                <ChevronRight size={14} className="rotate-180 group-hover:-translate-x-1 transition-transform" /> {t('back_to_sets')}
               </button>
             ) : (
               <div className="flex flex-wrap gap-2 p-1.5 glass border border-border-notion rounded-2xl w-full sm:w-fit shadow-soft">
-                <TabButton active={activeTab === "sets"} onClick={() => setActiveTab("sets")} icon={<BookOpen size={16} />} label="Bộ đề" />
-                <TabButton active={activeTab === "bank"} onClick={() => setActiveTab("bank")} icon={<LayoutList size={16} />} label="Ngân hàng" />
+                <TabButton active={activeTab === "sets"} onClick={() => setActiveTab("sets")} icon={<BookOpen size={16} />} label={t('sets_tab')} />
+                <TabButton active={activeTab === "bank"} onClick={() => setActiveTab("bank")} icon={<LayoutList size={16} />} label={t('bank_tab')} />
                 <TabButton active={activeTab === "history"} onClick={() => setActiveTab("history")} icon={<History size={16} />} label={t('history')} />
               </div>
             )}
@@ -179,7 +198,7 @@ export default function QuizManager() {
                     onChange={(e) => setSelectedSubject(e.target.value)}
                     className="px-4 py-2 bg-card/60 backdrop-blur-md text-foreground border border-border-notion rounded-xl text-xs font-bold outline-none focus:ring-1 focus:ring-accent/10 transition-all"
                   >
-                    <option value="" className="bg-card text-foreground">Tất cả môn</option>
+                    <option value="" className="bg-card text-foreground">{t('all_subjects')}</option>
                     {subjects.map(subject => (
                       <option key={subject} value={subject} className="bg-card text-foreground">{subject}</option>
                     ))}
@@ -189,7 +208,7 @@ export default function QuizManager() {
                     className="flex items-center gap-2 bg-accent text-background px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-accent/5"
                   >
                     <Plus size={18} />
-                    Tạo bộ đề
+                    {t('create_set')}
                   </button>
               </div>
             )}
@@ -200,7 +219,7 @@ export default function QuizManager() {
           <section className="animate-in fade-in slide-in-from-bottom-5 duration-500">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10">
               <h2 className="text-xs font-bold text-foreground/30 uppercase tracking-[0.2em]">
-                Danh sách câu hỏi ({editingSet?.questions.length})
+                {t('question_list_count')} ({editingSet?.questions.length})
               </h2>
               <div className="flex flex-wrap gap-3">
                 <label className="flex items-center gap-2 bg-active-notion/40 border border-border-notion text-accent px-4 py-2.5 rounded-xl text-xs font-bold cursor-pointer hover:bg-accent/5 transition-all">
@@ -224,7 +243,7 @@ export default function QuizManager() {
                       : "bg-active-notion/40 text-foreground/40 border-border-notion"
                   )}
                 >
-                  🔀 {shuffleEnabled ? "Xáo trộn: Bật" : "Xáo trộn: Tắt"}
+                  🔀 {shuffleEnabled ? t('shuffle_on') : t('shuffle_off')}
                 </button>
                 <button 
                   disabled={editingSet?.questions.length === 0}
@@ -232,7 +251,7 @@ export default function QuizManager() {
                   className="flex items-center gap-2 bg-success text-background px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-xl hover:opacity-90 disabled:opacity-20 transition-all"
                 >
                   <Play size={16} fill="currentColor" />
-                  Bắt đầu làm bài
+                  {t('start_quiz_btn')}
                 </button>
               </div>
             </div>
@@ -248,6 +267,31 @@ export default function QuizManager() {
                     placeholder="Nhập câu hỏi của bạn..."
                     rows={3}
                   />
+                  {/* Image upload */}
+                  <div className="flex items-center gap-4">
+                    {newImageUrl ? (
+                      <div className="relative group">
+                        <img src={newImageUrl} alt="question" className="h-32 rounded-2xl object-cover border border-border-notion" />
+                        <button
+                          onClick={() => setNewImageUrl("")}
+                          className="absolute top-2 right-2 p-1.5 bg-error text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all"
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
+                    ) : (
+                      <label className={cn(
+                        "flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold border cursor-pointer transition-all",
+                        imageUploading
+                          ? "bg-active-notion/40 text-foreground/30 border-border-notion"
+                          : "bg-active-notion/40 border-border-notion text-accent hover:bg-accent/5"
+                      )}>
+                        {imageUploading ? <Loader2 size={14} className="animate-spin" /> : <ImageIcon size={14} />}
+                        {imageUploading ? "Đang tải..." : "Thêm ảnh"}
+                        <input type="file" accept="image/*" className="hidden" onChange={handleQuestionImageUpload} disabled={imageUploading} />
+                      </label>
+                    )}
+                  </div>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
@@ -279,7 +323,7 @@ export default function QuizManager() {
                 <div className="flex justify-end gap-4 pt-6 border-t border-border-notion/50">
                   <button onClick={resetQuestionForm} className="px-6 py-2 text-foreground/40 font-bold uppercase text-[10px] tracking-widest">{t('cancel')}</button>
                   <button onClick={handleSaveQuestionToSet} className="bg-accent text-background px-10 py-3 rounded-xl font-bold uppercase text-[10px] tracking-widest shadow-xl hover:opacity-90 transition-all">
-                    {editingQuestionIdx !== null ? 'Cập nhật' : 'Lưu câu hỏi'}
+                    {editingQuestionIdx !== null ? t('update_btn') : t('save_question')}
                   </button>
                 </div>
               </motion.div>
@@ -292,42 +336,52 @@ export default function QuizManager() {
                   initial={{ opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: idx * 0.03 }}
-                  className="group p-6 bg-card/40 backdrop-blur-sm border border-border-notion rounded-2xl hover:border-accent/10 transition-all"
+                  className="group bg-card/40 backdrop-blur-sm border border-border-notion rounded-2xl hover:border-accent/10 transition-all overflow-hidden"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <p className="font-bold text-accent text-lg leading-relaxed">{q.text}</p>
-                      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {q.options.map((opt, i) => (
-                          <div key={i} className={cn(
-                            "text-xs px-4 py-2 rounded-xl border flex items-center justify-between",
-                            i === q.correctAnswer ? 'bg-success/5 text-success font-bold border-success/20' : 'bg-active-notion/20 text-foreground/40 border-transparent'
-                          )}>
-                            <span>{opt}</span>
-                            {i === q.correctAnswer && <CheckCircle2 size={14} />}
-                          </div>
-                        ))}
+                  {/* Image full-bleed */}
+                  {q.imageUrl && (
+                    <img src={q.imageUrl} alt="question" className="w-full object-cover" />
+                  )}
+                  <div className="p-5">
+                    <div className="flex items-start justify-between gap-3 mb-4">
+                      <p className="font-bold text-accent text-base leading-relaxed flex-1">{q.text}</p>
+                      <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all flex-shrink-0">
+                        <button 
+                          onClick={() => {
+                            setNewText(q.text);
+                            setNewOptions(q.options);
+                            setNewCorrect(q.correctAnswer);
+                            setNewImageUrl(q.imageUrl || "");
+                            setEditingQuestionIdx(idx);
+                            setIsAdding(true);
+                          }}
+                          className="p-2.5 bg-active-notion text-accent/40 hover:text-accent rounded-xl border border-border-notion transition-all"
+                        >
+                           <History size={16} />
+                        </button>
+                        <button 
+                          onClick={() => handleDeleteQuestionFromSet(idx)} 
+                          className="p-2.5 bg-error/5 text-error/40 hover:text-error rounded-xl border border-error/10 transition-all"
+                        >
+                          <Trash2 size={16} />
+                        </button>
                       </div>
                     </div>
-                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
-                      <button 
-                        onClick={() => {
-                          setNewText(q.text);
-                          setNewOptions(q.options);
-                          setNewCorrect(q.correctAnswer);
-                          setEditingQuestionIdx(idx);
-                          setIsAdding(true);
-                        }}
-                        className="p-2.5 bg-active-notion text-accent/40 hover:text-accent rounded-xl border border-border-notion transition-all"
-                      >
-                         <History size={16} />
-                      </button>
-                      <button 
-                        onClick={() => handleDeleteQuestionFromSet(idx)} 
-                        className="p-2.5 bg-error/5 text-error/40 hover:text-error rounded-xl border border-error/10 transition-all"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                    <div className="grid grid-cols-1 gap-2 w-full">
+                      {q.options.map((opt, i) => (
+                        <div key={i} className={cn(
+                          "w-full text-xs px-4 py-2.5 rounded-xl border flex items-center justify-between gap-2",
+                          i === q.correctAnswer ? 'bg-success/5 text-success font-bold border-success/20' : 'bg-active-notion/20 text-foreground/40 border-border-notion/50'
+                        )}>
+                          <span className="flex items-center gap-2">
+                            <span className={cn("w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-black flex-shrink-0",
+                              i === q.correctAnswer ? "bg-success/20 text-success" : "bg-active-notion text-foreground/30"
+                            )}>{String.fromCharCode(65+i)}</span>
+                            {opt}
+                          </span>
+                          {i === q.correctAnswer && <CheckCircle2 size={14} className="flex-shrink-0" />}
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </motion.div>
@@ -392,7 +446,7 @@ export default function QuizManager() {
                             <span>📚 {set.subject}</span>
                           </div>
                           <h3 className="font-extrabold text-2xl text-accent mb-3 tracking-tight group-hover:text-accent/80 transition-colors">{set.title}</h3>
-                          <p className="text-foreground/40 text-sm font-medium mb-10 line-clamp-2 h-10 leading-relaxed">{set.description || "Không có mô tả cho bộ đề này."}</p>
+                          <p className="text-foreground/40 text-sm font-medium mb-10 line-clamp-2 h-10 leading-relaxed">{set.description || t('no_description')}</p>
                         </div>
                         
                         <div className="flex items-center justify-between">
@@ -406,7 +460,7 @@ export default function QuizManager() {
                                 "p-3 rounded-xl transition-all border",
                                 set.isPublic ? "bg-accent text-background border-accent shadow-lg shadow-accent/10" : "bg-active-notion text-accent/40 border-border-notion"
                               )}
-                              title={set.isPublic ? "Đang chia sẻ" : "Chia sẻ lên cộng đồng"}
+                            title={set.isPublic ? t('sharing') : t('share_community')}
                             >
                               <BookOpen size={16} />
                             </button>
@@ -450,7 +504,7 @@ export default function QuizManager() {
                   {quizSets.length === 0 && (
                     <div className="col-span-full py-32 bg-active-notion/5 border-2 border-dashed border-border-notion rounded-[40px] text-center">
                       <BookOpen size={48} className="mx-auto text-foreground/10 mb-6" />
-                      <p className="text-foreground/30 font-bold uppercase text-[11px] tracking-widest">Chưa có bộ đề nào. Hãy tạo bộ đề đầu tiên!</p>
+                      <p className="text-foreground/30 font-bold uppercase text-[11px] tracking-widest">{t('no_sets')}</p>
                     </div>
                   )}
                 </div>
@@ -460,7 +514,7 @@ export default function QuizManager() {
             {activeTab === "bank" && (
               <section className="animate-in fade-in duration-500">
                 <div className="flex items-center justify-between mb-8 px-2">
-                  <h2 className="text-[11px] font-bold text-foreground/30 uppercase tracking-[0.2em]">Cơ sở dữ liệu ({questions.length})</h2>
+                  <h2 className="text-[11px] font-bold text-foreground/30 uppercase tracking-[0.2em]">{t('database_count')} ({questions.length})</h2>
                 </div>
                 <div className="space-y-4">
                   {questions.map((q) => (
@@ -490,15 +544,15 @@ export default function QuizManager() {
                       onClick={() => setSelectedResult(null)}
                       className="flex items-center gap-2 text-foreground/40 hover:text-accent font-bold uppercase text-[10px] tracking-widest transition-all group mb-6"
                     >
-                      <ChevronRight size={14} className="rotate-180 group-hover:-translate-x-1 transition-transform" /> Quay lại lịch sử
+                      <ChevronRight size={14} className="rotate-180 group-hover:-translate-x-1 transition-transform" /> {t('back_to_history')}
                     </button>
 
                     <div className="p-8 glass rounded-[32px] border border-border-notion/50 shadow-2xl">
                       <div className="flex items-center justify-between mb-8">
                         <div>
-                          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/30 mb-2">Kết quả kiểm tra</p>
+                          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/30 mb-2">{t('quiz_result_title')}</p>
                           <p className="text-2xl font-extrabold text-accent">{selectedResult.score} / {selectedResult.total} câu chính xác</p>
-                          <p className="text-lg text-foreground/40 font-bold mt-2">Tỷ lệ: <span className={selectedResult.score / selectedResult.total >= 0.8 ? "text-success" : "text-warning"}>{Math.round((selectedResult.score / selectedResult.total) * 100)}%</span></p>
+                          <p className="text-lg text-foreground/40 font-bold mt-2">{t('accuracy_rate')}: <span className={selectedResult.score / selectedResult.total >= 0.8 ? "text-success" : "text-warning"}>{Math.round((selectedResult.score / selectedResult.total) * 100)}%</span></p>
                         </div>
                         <div className={cn(
                           "w-24 h-24 rounded-[20px] flex items-center justify-center font-extrabold text-4xl shadow-inner border",
@@ -512,7 +566,7 @@ export default function QuizManager() {
 
                     {selectedResult.answers && selectedResult.answers.length > 0 && (
                       <div className="space-y-4">
-                        <h3 className="text-xs font-bold text-foreground/30 uppercase tracking-[0.2em]">Chi tiết từng câu</h3>
+                        <h3 className="text-xs font-bold text-foreground/30 uppercase tracking-[0.2em]">{t('detail_per_question')}</h3>
                         {selectedResult.answers.map((answer, idx) => (
                           <motion.div 
                             key={idx}
@@ -752,67 +806,77 @@ function QuizActive({ questions, shuffle = true, onExit }: { questions: Question
       </div>
 
       {/* Question */}
-      <div className="flex-1 flex flex-col items-center justify-center p-8 relative z-10 overflow-y-auto">
-        <div className="w-full max-w-3xl glass p-10 md:p-14 rounded-[48px] border-border-notion/50 shadow-2xl">
-          <h3 className="text-2xl md:text-3xl font-extrabold text-accent leading-tight tracking-tight mb-10">
-            {currentQ.text}
-          </h3>
+      <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 relative z-10 overflow-y-auto">
+        <div className="w-full max-w-3xl glass rounded-[32px] md:rounded-[48px] border border-border-notion/50 shadow-2xl overflow-hidden">
+          {/* Image full-bleed at top */}
+          {currentQ.imageUrl && (
+            <img
+              src={currentQ.imageUrl}
+              alt="question"
+              className="w-full object-cover"
+            />
+          )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {currentQ.options.map((opt, i) => {
-              const isSelected = selectedAnswers[currentIdx] === i;
-              return (
-                <button
-                  key={i}
-                  onClick={() => setSelectedAnswers(prev => ({ ...prev, [currentIdx]: i }))}
-                  className={cn(
-                    "w-full text-left p-6 rounded-2xl border-2 transition-all font-bold flex items-center gap-4 group",
-                    isSelected
-                      ? "border-accent bg-accent/10 text-accent"
-                      : "border-border-notion bg-active-notion/10 hover:border-accent/50 hover:bg-accent/5"
-                  )}
-                >
-                  <span className={cn(
-                    "w-8 h-8 rounded-lg flex items-center justify-center text-xs border transition-colors flex-shrink-0",
-                    isSelected
-                      ? "bg-accent text-background border-accent"
-                      : "bg-active-notion border-border-notion text-accent/40 group-hover:bg-accent/10"
-                  )}>
-                    {String.fromCharCode(65 + i)}
-                  </span>
-                  <span>{opt}</span>
-                  {isSelected && <CheckCircle2 size={18} className="ml-auto flex-shrink-0" />}
-                </button>
-              );
-            })}
-          </div>
+          <div className="p-6 md:p-10">
+            <h3 className="text-xl md:text-2xl font-extrabold text-accent leading-tight tracking-tight mb-6">
+              {currentQ.text}
+            </h3>
 
-          {/* Navigation */}
-          <div className="mt-10 flex items-center justify-between">
-            <button
-              onClick={() => setCurrentIdx(i => Math.max(0, i - 1))}
-              disabled={currentIdx === 0}
-              className="flex items-center gap-2 px-6 py-3 rounded-2xl font-bold text-sm border border-border-notion text-foreground/40 hover:text-accent hover:border-accent/30 disabled:opacity-20 transition-all"
-            >
-              <ChevronRight size={16} className="rotate-180" /> Câu trước
-            </button>
+            <div className="grid grid-cols-1 gap-3">
+              {currentQ.options.map((opt, i) => {
+                const isSelected = selectedAnswers[currentIdx] === i;
+                return (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedAnswers(prev => ({ ...prev, [currentIdx]: i }))}
+                    className={cn(
+                      "w-full text-left p-4 rounded-2xl border-2 transition-all font-bold flex items-center gap-3 group",
+                      isSelected
+                        ? "border-accent bg-accent/10 text-accent"
+                        : "border-border-notion bg-active-notion/10 hover:border-accent/50 hover:bg-accent/5"
+                    )}
+                  >
+                    <span className={cn(
+                      "w-8 h-8 rounded-lg flex items-center justify-center text-xs border transition-colors flex-shrink-0",
+                      isSelected
+                        ? "bg-accent text-background border-accent"
+                        : "bg-active-notion border-border-notion text-accent/40 group-hover:bg-accent/10"
+                    )}>
+                      {String.fromCharCode(65 + i)}
+                    </span>
+                    <span className="flex-1">{opt}</span>
+                    {isSelected && <CheckCircle2 size={18} className="flex-shrink-0" />}
+                  </button>
+                );
+              })}
+            </div>
 
-            {currentIdx < quizQuestions.length - 1 ? (
+            {/* Navigation */}
+            <div className="mt-8 flex items-center justify-between gap-3">
               <button
-                onClick={() => setCurrentIdx(i => i + 1)}
-                className="flex items-center gap-2 bg-accent text-background px-10 py-3 rounded-2xl font-bold text-sm shadow-xl hover:opacity-90 active:scale-95 transition-all"
+                onClick={() => setCurrentIdx(i => Math.max(0, i - 1))}
+                disabled={currentIdx === 0}
+                className="flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-sm border border-border-notion text-foreground/40 hover:text-accent hover:border-accent/30 disabled:opacity-20 transition-all"
               >
-                Câu tiếp theo <ChevronRight size={16} />
+                <ChevronRight size={16} className="rotate-180" /> Câu trước
               </button>
-            ) : (
-              <button
-                onClick={handleSubmit}
-                disabled={!allAnswered}
-                className={cn(
-                  "flex items-center gap-2 px-10 py-3 rounded-2xl font-bold text-sm shadow-xl transition-all",
-                  allAnswered
-                    ? "bg-success text-background hover:opacity-90 active:scale-95"
-                    : "bg-foreground/10 text-foreground/30 cursor-not-allowed"
+
+              {currentIdx < quizQuestions.length - 1 ? (
+                <button
+                  onClick={() => setCurrentIdx(i => i + 1)}
+                  className="flex items-center gap-2 bg-accent text-background px-8 py-3 rounded-2xl font-bold text-sm shadow-xl hover:opacity-90 active:scale-95 transition-all"
+                >
+                  Câu tiếp theo <ChevronRight size={16} />
+                </button>
+              ) : (
+                <button
+                  onClick={handleSubmit}
+                  disabled={!allAnswered}
+                  className={cn(
+                    "flex items-center gap-2 px-8 py-3 rounded-2xl font-bold text-sm shadow-xl transition-all",
+                    allAnswered
+                      ? "bg-success text-background hover:opacity-90 active:scale-95"
+                      : "bg-foreground/10 text-foreground/30 cursor-not-allowed"
                 )}
               >
                 <CheckCircle2 size={16} />
@@ -832,8 +896,9 @@ function QuizActive({ questions, shuffle = true, onExit }: { questions: Question
               </button>
             </div>
           )}
-        </div>
-      </div>
+          </div>{/* end p-6 md:p-10 */}
+        </div>{/* end glass card */}
+      </div>{/* end flex-1 */}
     </div>
   );
 }

@@ -139,7 +139,7 @@ export default function SettingsToggle() {
         >
           <div className="flex items-center gap-2">
             <User size={12} className="text-foreground/30" />
-            <span className="text-[10px] font-black text-foreground/30 uppercase tracking-[2px]">Hồ sơ</span>
+            <span className="text-[10px] font-black text-foreground/30 uppercase tracking-[2px]">{t('profile')}</span>
           </div>
           {profileOpen ? <ChevronUp size={12} className="text-foreground/30" /> : <ChevronDown size={12} className="text-foreground/30" />}
         </button>
@@ -148,18 +148,18 @@ export default function SettingsToggle() {
           <div className="mt-4 space-y-4">
             {/* Name */}
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-widest text-foreground/30 mb-1.5">Tên hiển thị</label>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-foreground/30 mb-1.5">{t('display_name')}</label>
               <input
                 value={displayName}
                 onChange={e => setDisplayName(e.target.value)}
-                placeholder="Tên của bạn..."
+                placeholder={t('display_name')}
                 className="w-full px-3 py-2 bg-card/60 border border-border-notion rounded-xl text-xs font-bold text-accent outline-none focus:ring-1 focus:ring-accent/20 transition-all"
               />
             </div>
 
             {/* Age */}
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-widest text-foreground/30 mb-1.5">Tuổi</label>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-foreground/30 mb-1.5">{t('age')}</label>
               <input
                 type="number"
                 min={6}
@@ -173,7 +173,7 @@ export default function SettingsToggle() {
 
             {/* Grade */}
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-widest text-foreground/30 mb-1.5">Lớp / Cấp học</label>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-foreground/30 mb-1.5">{t('grade')}</label>
               <div className="flex flex-wrap gap-1.5">
                 {GRADES.map(g => (
                   <button
@@ -194,7 +194,7 @@ export default function SettingsToggle() {
 
             {/* Subjects */}
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-widest text-foreground/30 mb-1.5">Môn học quan tâm</label>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-foreground/30 mb-1.5">{t('subjects_interest')}</label>
               <div className="flex flex-wrap gap-1.5">
                 {subjects.map(s => (
                   <button
@@ -224,7 +224,7 @@ export default function SettingsToggle() {
                   : "bg-accent text-background hover:opacity-90 disabled:opacity-40"
               )}
             >
-              {saved ? <><Check size={12} /> Đã lưu</> : saving ? "Đang lưu..." : "Lưu thay đổi"}
+              {saved ? <><Check size={12} /> {t('saved')}</> : saving ? t('saving') : t('save_changes')}
             </button>
           </div>
         )}

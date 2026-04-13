@@ -124,11 +124,9 @@ export default function HostDashboard({ session, hostId }: HostDashboardProps) {
 
                 {/* Warning indicator */}
                 {warning && (
-                  <AlertTriangle
-                    size={15}
-                    className="text-red-500 shrink-0"
-                    title="Cảnh báo: rời tab quá nhiều lần"
-                  />
+                  <span title="Cảnh báo: rời tab quá nhiều lần">
+                    <AlertTriangle size={15} className="text-red-500 shrink-0" />
+                  </span>
                 )}
 
                 {/* Status badge */}

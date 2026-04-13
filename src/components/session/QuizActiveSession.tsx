@@ -178,7 +178,7 @@ export default function QuizActiveSession({
   const timerRed = showTimer && timeRemaining < 60_000;
 
   return (
-    <div className="flex flex-col gap-4 w-full max-w-2xl mx-auto py-6">
+    <div className="flex flex-col gap-4 w-full max-w-3xl mx-auto py-6 px-2">
       {/* Offline banner */}
       {!isOnline && (
         <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-600 text-sm font-medium">
@@ -208,6 +208,13 @@ export default function QuizActiveSession({
         <p className="text-base font-medium text-foreground leading-relaxed">
           {question.text}
         </p>
+        {question.imageUrl && (
+          <img
+            src={question.imageUrl}
+            alt="question"
+            className="mt-3 w-full rounded-lg object-cover border border-border"
+          />
+        )}
       </div>
 
       {/* Options */}
@@ -218,7 +225,7 @@ export default function QuizActiveSession({
             <li key={idx}>
               <button
                 onClick={() => selectOption(idx)}
-                className={`w-full text-left px-4 py-3 rounded-xl border transition-colors text-sm font-medium ${
+                className={`w-full text-left px-5 py-4 rounded-xl border transition-colors text-sm font-medium ${
                   isSelected
                     ? "border-primary bg-primary/10 text-primary"
                     : "border-border bg-foreground/5 text-foreground hover:bg-foreground/10"

@@ -85,10 +85,10 @@ export default function HabitTracker() {
           <div>
             <div className="flex items-center gap-3 text-accent font-black uppercase text-[10px] tracking-[0.3em] mb-4">
                <Target size={14} />
-               Theo dõi thói quen
+               {t('habit_tracker_title')}
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-accent mb-4 tracking-tighter leading-tight">
-              Kỷ luật là sức mạnh <br /><span className="text-foreground/20">Xây dựng tương lai qua thói quen</span>
+              {t('habit_tracker_tagline')} <br /><span className="text-foreground/20">{t('habit_tracker_subtitle')}</span>
             </h1>
           </div>
           <button 
@@ -120,9 +120,9 @@ export default function HabitTracker() {
                        <div className="min-w-0">
                           <h3 className="text-lg md:text-xl font-black text-accent mb-1 truncate">{habit.name}</h3>
                           <div className="flex items-center gap-3">
-                             <span className="flex items-center gap-1.5 text-[10px] md:text-xs font-bold text-orange-500">
+             <span className="flex items-center gap-1.5 text-[10px] md:text-xs font-bold text-orange-500">
                                 <Flame size={14} fill="currentColor" />
-                                {calculateStreak(habit.id!)} ngày
+                                {calculateStreak(habit.id!)} {t('days_streak')}
                              </span>
                              <button 
                                onClick={() => handleDelete(habit.id!)}
@@ -171,7 +171,7 @@ export default function HabitTracker() {
            {habits.length === 0 && (
              <div className="py-40 text-center bg-card border border-dashed border-border-notion rounded-[60px] opacity-20">
                 <Target size={64} className="mx-auto mb-6" />
-                <p className="font-black uppercase tracking-[0.2em] text-xs">Chưa có thói quen nào được tạo</p>
+                <p className="font-black uppercase tracking-[0.2em] text-xs">{t('no_habits')}</p>
              </div>
            )}
         </div>
@@ -194,7 +194,7 @@ export default function HabitTracker() {
                className="relative bg-card border border-border-notion w-full max-w-md rounded-[48px] p-10 shadow-2xl"
              >
                 <div className="flex justify-between items-center mb-8">
-                   <h2 className="text-2xl font-black text-accent tracking-tighter">Tạo thói quen mới</h2>
+                   <h2 className="text-2xl font-black text-accent tracking-tighter">{t('create_habit')}</h2>
                    <button onClick={() => setIsAddingHabit(false)} className="p-2 hover:bg-active-notion rounded-full transition-colors">
                       <X size={20} />
                    </button>
@@ -204,11 +204,11 @@ export default function HabitTracker() {
                    type="text"
                    value={newName}
                    onChange={(e) => setNewName(e.target.value)}
-                   placeholder="Tên thói quen (vd: Đọc sách, Chạy bộ...)"
+                   placeholder={t('habit_name_placeholder')}
                    className="w-full bg-active-notion border-none rounded-3xl p-6 text-lg font-bold outline-none mb-8 placeholder:text-foreground/10 text-accent"
                 />
                 
-                <p className="text-[10px] font-black uppercase tracking-widest text-accent/40 mb-4 px-2">Chọn màu sắc</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-accent/40 mb-4 px-2">{t('choose_color')}</p>
                 <div className="flex flex-wrap gap-4 mb-10 px-2">
                    {COLORS.map(color => (
                      <button 
@@ -230,7 +230,7 @@ export default function HabitTracker() {
                   disabled={!newName.trim()}
                   className="w-full bg-accent text-background py-5 rounded-3xl font-black uppercase text-sm shadow-xl shadow-accent/20 hover:opacity-90 disabled:opacity-20 transition-all active:scale-95"
                 >
-                  Bắt đầu ngay
+                  {t('start_now')}
                 </button>
              </motion.div>
           </div>

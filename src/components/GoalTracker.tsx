@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { goalService, Goal, GoalType, GoalPeriod } from "@/services/goalService";
 import { quizService } from "@/services/quizService";
+import { useLanguage } from "@/context/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { Target, Plus, Trash2, CheckCircle2, Clock, TrendingUp, X, ChevronRight, Flame, Trophy, BookOpen } from "lucide-react";
 import { Timestamp } from "firebase/firestore";
@@ -66,6 +67,7 @@ function ProgressRing({ pct, size = 64, stroke = 5, color = "stroke-accent" }: {
 
 export default function GoalTracker() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [goals, setGoals] = useState<Goal[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<{ open: boolean; id: string }>({ open: false, id: "" });
@@ -152,17 +154,17 @@ export default function GoalTracker() {
         <header className="mb-12">
           <div className="flex items-center gap-2.5 text-accent/40 font-bold uppercase text-[10px] tracking-[0.3em] mb-4">
             <Target size={14} className="text-warning" />
-            <span>Mục tiêu học tập</span>
+            <span>{t('goal_tracker_title')}</span>
           </div>
           <div className="flex items-end justify-between gap-4">
             <h1 className="text-3xl md:text-5xl font-extrabold text-accent tracking-tighter leading-tight">
-              Mục tiêu của bạn
+              {t('your_goals')}
             </h1>
             <button
               onClick={() => setIsCreating(true)}
               className="flex items-center gap-2 bg-accent text-background px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-accent/10 flex-shrink-0"
             >
-              <Plus size={16} /> Tạo mục tiêu
+              <Plus size={16} /> {t('create_goal')}
             </button>
           </div>
 
@@ -170,9 +172,9 @@ export default function GoalTracker() {
           {goals.length > 0 && (
             <div className="mt-8 grid grid-cols-3 gap-4">
               {[
-                { label: "Đang thực hiện", value: active.length, icon: <Flame size={18} />, color: "text-warning" },
-                { label: "Hoàn thành", value: completed.length, icon: <Trophy size={18} />, color: "text-success" },
-                { label: "Tổng mục tiêu", value: goals.length, icon: <Target size={18} />, color: "text-accent" },
+                { label: t('active_goals'), value: active.length, icon: <Flame size={18} />, color: "text-warning" },
+                { label: t('completed_goals_label'), value: completed.length, icon: <Trophy size={18} />, color: "text-success" },
+                { label: t('total_goals'), value: goals.length, icon: <Target size={18} />, color: "text-accent" },
               ].map((s, i) => (
                 <div key={i} className="p-5 glass rounded-2xl border border-border-notion flex items-center gap-4">
                   <span className={s.color}>{s.icon}</span>
@@ -202,7 +204,7 @@ export default function GoalTracker() {
                 className="bg-card border border-border-notion rounded-3xl p-8 w-full max-w-lg shadow-2xl"
               >
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-extrabold text-accent">Tạo mục tiêu mới</h2>
+                  <h2 className="text-xl font-extrabold text-accent">{t('create_goal')}</h2>
                   <button onClick={() => setIsCreating(false)} className="p-2 hover:bg-active-notion rounded-xl transition-colors">
                     <X size={18} className="text-foreground/40" />
                   </button>
@@ -227,18 +229,18 @@ export default function GoalTracker() {
 
                 <div className="space-y-4">
                   <div>
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-foreground/30 mb-1.5 block">Tên mục tiêu</label>
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-foreground/30 mb-1.5 block">{t('goal_name_label')}</label>
                     <input
                       value={title}
                       onChange={e => setTitle(e.target.value)}
-                      placeholder="VD: Đạt 80% trong tuần này"
+                      placeholder={t('goal_name_placeholder')}
                       className="w-full p-3 bg-active-notion/40 rounded-xl outline-none text-sm font-medium text-accent placeholder:text-foreground/20 focus:ring-1 focus:ring-accent/20"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-[10px] font-bold uppercase tracking-widest text-foreground/30 mb-1.5 block">Mục tiêu</label>
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-foreground/30 mb-1.5 block">{t('goal_target_label')}</label>
                       <div className="flex gap-2">
                         <input
                           type="number"
@@ -255,7 +257,7 @@ export default function GoalTracker() {
                       </div>
                     </div>
                     <div>
-                      <label className="text-[10px] font-bold uppercase tracking-widest text-foreground/30 mb-1.5 block">Thời hạn</label>
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-foreground/30 mb-1.5 block">{t('deadline_label')}</label>
                       <select
                         value={period}
                         onChange={e => setPeriod(e.target.value as GoalPeriod)}
@@ -270,7 +272,7 @@ export default function GoalTracker() {
 
                   {period === 'custom' && (
                     <div>
-                      <label className="text-[10px] font-bold uppercase tracking-widest text-foreground/30 mb-1.5 block">Ngày kết thúc</label>
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-foreground/30 mb-1.5 block">{t('end_date_label')}</label>
                       <input
                         type="date"
                         value={customEnd}
@@ -281,11 +283,11 @@ export default function GoalTracker() {
                   )}
 
                   <div>
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-foreground/30 mb-1.5 block">Ghi chú (tuỳ chọn)</label>
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-foreground/30 mb-1.5 block">{t('note_optional')}</label>
                     <textarea
                       value={description}
                       onChange={e => setDescription(e.target.value)}
-                      placeholder="Mô tả thêm về mục tiêu..."
+                      placeholder={t('note_placeholder')}
                       rows={2}
                       className="w-full p-3 bg-active-notion/40 rounded-xl outline-none text-sm font-medium text-accent placeholder:text-foreground/20 resize-none focus:ring-1 focus:ring-accent/20"
                     />
@@ -294,14 +296,14 @@ export default function GoalTracker() {
 
                 <div className="flex gap-3 mt-6">
                   <button onClick={() => setIsCreating(false)} className="flex-1 py-3 rounded-xl font-bold text-sm text-foreground/40 hover:bg-active-notion transition-colors">
-                    Hủy
+                    {t('cancel')}
                   </button>
                   <button
                     onClick={handleCreate}
                     disabled={!title}
                     className="flex-1 py-3 rounded-xl font-bold text-sm bg-accent text-background hover:opacity-90 disabled:opacity-30 transition-all shadow-lg"
                   >
-                    Tạo mục tiêu
+                    {t('create_goal')}
                   </button>
                 </div>
               </motion.div>
@@ -313,10 +315,10 @@ export default function GoalTracker() {
         {goals.length === 0 && (
           <div className="text-center py-32 border-2 border-dashed border-border-notion rounded-3xl">
             <Target size={48} className="mx-auto text-foreground/10 mb-4" />
-            <p className="font-bold text-foreground/30 mb-2">Chưa có mục tiêu nào</p>
-            <p className="text-sm text-foreground/20 mb-6">Đặt mục tiêu để theo dõi tiến độ học tập</p>
+            <p className="font-bold text-foreground/30 mb-2">{t('no_goals')}</p>
+            <p className="text-sm text-foreground/20 mb-6">{t('no_goals_desc')}</p>
             <button onClick={() => setIsCreating(true)} className="bg-accent text-background px-8 py-3 rounded-xl font-bold text-sm hover:opacity-90 transition-all">
-              Tạo mục tiêu đầu tiên
+              {t('create_first_goal')}
             </button>
           </div>
         )}
@@ -325,7 +327,7 @@ export default function GoalTracker() {
         {active.length > 0 && (
           <section className="mb-12">
             <h2 className="text-xs font-bold text-foreground/30 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
-              <Flame size={14} className="text-warning" /> Đang thực hiện ({active.length})
+              <Flame size={14} className="text-warning" /> {t('active_goals')} ({active.length})
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {active.map(goal => <GoalCard key={goal.id} goal={goal} onDelete={id => setConfirmDelete({ open: true, id })} onUpdateProgress={async (val) => { await goalService.updateProgress(user!.uid, goal.id!, val); }} />)}
@@ -337,7 +339,7 @@ export default function GoalTracker() {
         {completed.length > 0 && (
           <section>
             <h2 className="text-xs font-bold text-foreground/30 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
-              <Trophy size={14} className="text-success" /> Đã hoàn thành ({completed.length})
+              <Trophy size={14} className="text-success" /> {t('completed_goals_label')} ({completed.length})
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {completed.map(goal => <GoalCard key={goal.id} goal={goal} onDelete={id => setConfirmDelete({ open: true, id })} />)}
@@ -354,6 +356,7 @@ function GoalCard({ goal, onDelete, onUpdateProgress }: {
   onDelete: (id: string) => void;
   onUpdateProgress?: (val: number) => void;
 }) {
+  const { t } = useLanguage();
   const pct = Math.min(Math.round((goal.current / goal.target) * 100), 100);
   const isCompleted = goal.status === 'completed';
   const daysLeft = Math.ceil((goal.endDate.toDate().getTime() - Date.now()) / 86400000);
@@ -400,7 +403,7 @@ function GoalCard({ goal, onDelete, onUpdateProgress }: {
 
       <div className="mt-3 flex items-center justify-between">
         <span className={cn("text-[10px] font-bold uppercase tracking-widest", isCompleted ? "text-success" : daysLeft <= 1 ? "text-error" : "text-foreground/30")}>
-          {isCompleted ? "✓ Hoàn thành!" : daysLeft > 0 ? `Còn ${daysLeft} ngày` : "Đã hết hạn"}
+          {isCompleted ? t('completed_badge') : daysLeft > 0 ? `${t('days_left').replace('{n}', String(daysLeft))}` : t('expired')}
         </span>
         <span className="text-[10px] font-bold text-foreground/20 uppercase">{PERIOD_LABELS[goal.period]}</span>
       </div>
@@ -416,7 +419,7 @@ function GoalCard({ goal, onDelete, onUpdateProgress }: {
             onBlur={e => onUpdateProgress(Number(e.target.value))}
             className="w-20 p-2 bg-active-notion/40 rounded-lg text-xs font-bold text-accent outline-none focus:ring-1 focus:ring-accent/20"
           />
-          <span className="text-xs text-foreground/30">{goal.unit} (cập nhật thủ công)</span>
+          <span className="text-xs text-foreground/30">{goal.unit} ({t('manual_update')})</span>
         </div>
       )}
     </motion.div>

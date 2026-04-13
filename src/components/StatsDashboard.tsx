@@ -65,7 +65,7 @@ export default function StatsDashboard({ onNavigate }: { onNavigate?: (view: str
                {new Date().toLocaleDateString('vi', { weekday: 'long', day: 'numeric', month: 'long' })}
              </p>
              <div className="px-4 py-1.5 glass rounded-full text-[10px] font-bold text-accent/60 uppercase tracking-widest border border-border-notion">
-                Trạng thái: Đang hoạt động
+                {t('active_status')}
              </div>
           </div>
         </header>
@@ -74,7 +74,7 @@ export default function StatsDashboard({ onNavigate }: { onNavigate?: (view: str
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-12">
           <StatCard icon={<BookText size={20} />} label={t('total_notes')} value={notes.length} color="text-blue-500" />
           <StatCard icon={<Brain size={20} />} label={t('due_cards')} value={dueCardsCount} color="text-warning" />
-          <StatCard icon={<GraduationCap size={20} />} label="Bộ đề" value={quizSets.length} color="text-success" />
+          <StatCard icon={<GraduationCap size={20} />} label={t('quiz_set_count')} value={quizSets.length} color="text-success" />
           <StatCard icon={<Zap size={20} />} label={streak + " ngày"} color="text-error" unit={t('streak')} />
         </div>
 
@@ -135,7 +135,7 @@ export default function StatsDashboard({ onNavigate }: { onNavigate?: (view: str
                    <Zap size={24} fill="currentColor" className="text-background" />
                 </div>
                 <h3 className="text-2xl font-bold mb-3 tracking-tight">{t('ready_prompt')}</h3>
-                <p className="opacity-50 text-sm mb-8 leading-relaxed font-medium">Bạn đã sẵn sàng để chinh phục kiến thức mới chưa?</p>
+                <p className="opacity-50 text-sm mb-8 leading-relaxed font-medium">{t('ready_prompt')}</p>
               </div>
               
               <button
@@ -155,7 +155,7 @@ export default function StatsDashboard({ onNavigate }: { onNavigate?: (view: str
                 <div className="w-8 h-8 rounded-lg bg-success/10 flex items-center justify-center text-success">
                   <Star size={18} />
                 </div>
-                <h3 className="text-lg font-bold text-accent tracking-tight">Kỹ năng</h3>
+                <h3 className="text-lg font-bold text-accent tracking-tight">{t('quiz_results')}</h3>
               </div>
               
               {results.length > 0 ? (

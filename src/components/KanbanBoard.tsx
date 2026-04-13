@@ -46,9 +46,9 @@ export default function KanbanBoard() {
   };
 
   const columns: { id: TaskStatus; label: string; icon: any; color: string }[] = [
-    { id: "todo", label: "Cần làm", icon: Clock, color: "text-accent/40" },
-    { id: "doing", label: "Đang làm", icon: AlertCircle, color: "text-warning" },
-    { id: "done", label: "Hoàn thành", icon: CheckCircle2, color: "text-success" }
+    { id: "todo", label: t('todo_col'), icon: Clock, color: "text-accent/40" },
+    { id: "doing", label: t('doing_col'), icon: AlertCircle, color: "text-warning" },
+    { id: "done", label: t('done_col'), icon: CheckCircle2, color: "text-success" }
   ];
 
   return (
@@ -56,9 +56,9 @@ export default function KanbanBoard() {
       <div className="h-full flex flex-col">
         <header className="mb-8 md:mb-12">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-accent mb-4 tracking-tighter leading-tight">
-            Trình quản lý nhiệm vụ <br /><span className="text-foreground/20">Quản lý việc học thông minh hơn</span>
+            {t('task_manager_title')} <br /><span className="text-foreground/20">{t('task_manager_subtitle')}</span>
           </h1>
-          <p className="text-foreground/40 font-bold max-w-2xl text-[10px] sm:text-xs uppercase tracking-widest">{t('productivity_dashboard') || "Nâng cao năng suất học tập"}</p>
+          <p className="text-foreground/40 font-bold max-w-2xl text-[10px] sm:text-xs uppercase tracking-widest">{t('productivity_dashboard')}</p>
         </header>
 
         <div className="flex-1 flex gap-8 min-h-[600px] pb-10 overflow-x-auto no-scrollbar">
@@ -93,7 +93,7 @@ export default function KanbanBoard() {
                         value={newTitle}
                         onChange={(e) => setNewTitle(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleAddTask(col.id)}
-                        placeholder="Tên nhiệm vụ..."
+                        placeholder={t('task_name_placeholder')}
                         className="w-full bg-transparent border-none outline-none font-bold text-accent placeholder:text-foreground/10 mb-4"
                       />
                       <div className="flex items-center justify-between">
@@ -102,9 +102,9 @@ export default function KanbanBoard() {
                            onChange={(e) => setNewPriority(e.target.value as TaskPriority)}
                            className="bg-active-notion text-[10px] font-black uppercase px-3 py-1.5 rounded-xl outline-none border-none text-accent/60"
                          >
-                           <option value="low">Thấp</option>
-                           <option value="medium">Vừa</option>
-                           <option value="high">Cao</option>
+                         <option value="low">{t('low_priority')}</option>
+                           <option value="medium">{t('medium_priority')}</option>
+                           <option value="high">{t('high_priority')}</option>
                          </select>
                          <div className="flex gap-2">
                             <button onClick={() => setIsAddingTask(null)} className="px-4 py-1.5 rounded-xl text-[10px] font-black uppercase text-foreground/20 hover:text-error transition-all">Hủy</button>
@@ -133,6 +133,7 @@ export default function KanbanBoard() {
 }
 
 function TaskCard({ task, onDelete, onMove }: { task: KanbanTask, onDelete: () => void, onMove: (s: TaskStatus) => void }) {
+  const { t } = useLanguage();
   const priorityColors = {
     low: "bg-success/10 text-success",
     medium: "bg-warning/10 text-warning",
@@ -140,9 +141,9 @@ function TaskCard({ task, onDelete, onMove }: { task: KanbanTask, onDelete: () =
   };
 
   const priorityLabels = {
-     low: "Thấp",
-     medium: "Vừa",
-     high: "Cao"
+     low: t('low_priority'),
+     medium: t('medium_priority'),
+     high: t('high_priority')
   };
 
   const statusFlow: Record<TaskStatus, TaskStatus[]> = {
@@ -173,7 +174,7 @@ function TaskCard({ task, onDelete, onMove }: { task: KanbanTask, onDelete: () =
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-foreground/20">
            <Calendar size={12} />
-           <span className="text-[10px] font-bold">Mới đây</span>
+           <span className="text-[10px] font-bold">{t('recently')}</span>
         </div>
         <div className="flex gap-1.5 opacity-0 group-hover/card:opacity-100 transition-opacity">
            {statusFlow[task.status].map(s => (

@@ -21,6 +21,7 @@ export interface Question {
   correctAnswer: number; // Index
   tags: string[];
   subject: string;
+  imageUrl?: string; // Optional image for the question
 }
 
 export interface QuizAnswer {
