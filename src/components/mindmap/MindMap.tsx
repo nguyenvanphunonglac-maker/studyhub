@@ -141,14 +141,21 @@ export default function MindMap() {
 
   const handleSave = async () => {
     if (!user || !activeMap) return;
-    // Strip callbacks before saving
+    // Strip callbacks and undefined values before saving
     const cleanNodes = nodes.map(n => ({
       id: n.id,
-      type: n.type,
-      data: { label: n.data.label, isRoot: n.data.isRoot },
-      position: n.position,
+      type: n.type ?? 'mindmap',
+      data: { label: n.data.label ?? '', isRoot: n.data.isRoot ?? false },
+      position: { x: n.position.x ?? 0, y: n.position.y ?? 0 },
     }));
-    await mindmapService.updateMindMap(user.uid, activeMap.id!, { nodes: cleanNodes, edges });
+    const cleanEdges = edges.map(e => ({
+      id: e.id,
+      source: e.source,
+      target: e.target,
+      ...(e.type ? { type: e.type } : {}),
+      ...(e.label ? { label: e.label } : {}),
+    }));
+    await mindmapService.updateMindMap(user.uid, activeMap.id!, { nodes: cleanNodes, edges: cleanEdges });
     alert("Đã lưu sơ đồ!");
   };
 

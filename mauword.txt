@@ -1,0 +1,320 @@
+
+TRƯỜNG THPT ĐĂK SONG
+NGÀY HỘI STEM NĂM 2026
+
+
+
+BÁO CÁO STEM 
+
+ĐỀ TÀI: NGHIÊN CỨU CHẾ TẠO MÀNG BỌC THỰC PHẨM TỪ CỦ CHUỐI
+ 
+LĨNH VỰC: HÓA HỌC – ỨNG DỤNG ĐỜI SỐNG
+
+                      Học sinh thực hiện: Lê Thị Diễm Phúc
+Nguyễn Thị Thanh Quyên
+ 				                  Đồng Hải Linh			
+                   Lớp:                         11B5
+                   Giáo viên hướng dẫn: Nguyễn Lê Thị Đài Trang
+ 
+BÁO CÁO SẢN PHẨM STEM
+“NGHIÊN CỨU CHẾ TẠO MÀNG BỌC THỰC PHẨM TỪ CỦ CHUỐI”
+
+PHẦN 1. MỞ ĐẦU
+1.1. Tên chủ đề STEM: “ Nghiên cứu chế tạo màng bọc thực phẩm từ củ chuối"
+1.2. Giáo viên hướng dẫn: Nguyễn Lê Thị Đài Trang – giáo viên Hóa học.
+1.3. Học sinh thực hiện:   Lê Thị Diễm Phúc học sinh lớp 11B5
+Nguyễn Thị Thanh Quyên học sinh lớp 11B5
+ 				Đồng Hải Linh học sinh lớp 11B5
+1.4. Lĩnh vực dự thi: Khoa học vật liệu / Hóa học ứng dụng 
+1.5. Tóm tắt đề tài
+Đề tài nghiên cứu tận dụng nguồn nguyên liệu sẵn có tại địa phương là củ chuối – một phế phẩm nông nghiệp để chiết xuất tinh bột và chế tạo màng bọc thực phẩm sinh học. Sản phẩm hướng tới thay thế màng nhựa khó phân hủy, góp phần giảm thiểu ô nhiễm môi trường.
+Quá trình thực hiện đề tài bao gồm: tách tinh bột, phối trộn với chất hóa dẻo (glycerol), gia nhiệt tạo dung dịch màng và đúc thành màng mỏng. Kết quả cho thấy màng có độ dẻo, độ trong nhất định, có khả năng phân hủy sinh học và ứng dụng trong bảo quản thực phẩm ngắn hạn.
+1.6. Lý do chọn đề tài
+Hiện nay, màng bọc thực phẩm bằng nhựa là vật dụng quen thuộc trong mọi gian bếp vì tính tiện lợi. Thế nhưng, do chỉ được sử dụng một lần rồi vứt bỏ, chúng đang tạo ra một lượng rác thải nhựa khổng lồ. Những lớp màng mỏng manh này mất hàng trăm năm để phân hủy, sinh ra các hạt vi nhựa gây ô nhiễm đất, nước và tiềm ẩn rủi ro cho sức khỏe con người. Việc tìm kiếm một loại "vật liệu xanh" để thay thế nhựa hóa dầu đang là một bài toán cấp thiết cho mọi quốc gia.
+Việt Nam là quốc gia có diện tích trồng chuối rất lớn và các xã chúng em đang sinh sống trong những năm gần đây diện tích trồng chuối đã không ngừng được mở rộng. Sau khi thu hoạch quả, phần lớn thân và đặc biệt là củ chuối thường bị chặt bỏ, vừa lãng phí vừa gây áp lực xử lý rác thải nông nghiệp. Tuy nhiên dưới góc độ khoa học, củ chuối không hề vô dụng vì chúng chứa hàm lượng tinh bột rất cao. Tinh bột có một đặc tính tự nhiên vô cùng quý giá là khả năng tạo màng sinh học. Lớp màng này an toàn tuyệt đối khi tiếp xúc với thức ăn và có thể phân hủy dễ dàng ngoài tự nhiên thành phân bón hữu cơ cho đất.
+Từ những trăn trở và nhận định trên, chúng em quyết định thực hiện đề tài "Nghiên cứu chế tạo màng bọc thực phẩm từ củ chuối". Đề tài hướng tới mục tiêu vừa tạo ra một sản phẩm bao bì an toàn, thân thiện để bảo vệ sức khỏe người dùng và môi trường; vừa tận dụng tối đa phụ phẩm nông nghiệp, biến củ chuối tưởng như bỏ đi thành một sản phẩm có giá trị thực tiễn cao. Đồng thời đây là cơ hội tuyệt vời để chúng em, mang những kiến thức khoa học khô khan trên trang sách vào thực tiễn, góp phần nâng cao giá trị cho nông sản quê hương và lan tỏa lối sống xanh đến cộng đồng.
+1.7. Mục tiêu nghiên cứu
+ Để thực hiện dự án này, nhóm chúng em tập trung vào 4 mục tiêu trọng tâm sau đây:
+  -  Làm chủ quy trình chiết xuất tinh bột: Tìm ra cách thức tối ưu để tách được lượng tinh bột tinh khiết từ củ chuối (vốn là phần phụ phẩm thường bị bỏ đi sau vụ thu hoạch). Đây sẽ là nguồn nguyên liệu chính, hoàn toàn tự nhiên để tạo ra sản phẩm.
+  -  Chế tạo thành công màng bọc sinh học: Ứng dụng khả năng tạo màng của tinh bột để sản xuất ra những tấm màng bọc thực phẩm mỏng, dai và an toàn cho sức khỏe, có khả năng thay thế màng nhựa nilon truyền thống.
+  -  Kiểm chứng chất lượng thực tế: Tiến hành các thử nghiệm thực tế để đánh giá xem màng bọc có đủ độ dẻo dai, độ bền khi kéo giãn và đặc biệt là khả năng phân hủy hoàn toàn trong môi trường tự nhiên sau khi sử dụng hay không.
+  -  Kết nối tri thức và thực tiễn (STEM): Thông qua dự án, nhóm mong muốn làm rõ các nguyên lý hóa học (về cấu trúc polymer tự nhiên) và kỹ thuật chế tạo. Từ đó, vận dụng những kiến thức đã học trên lớp để giải quyết một vấn đề cụ thể của địa phương, góp phần bảo vệ môi trường nông thôn xanh - sạch - đẹp.
+1.8. Câu hỏi nghiên cứu
+-  Từ củ chuối có thể tạo màng bọc thực phẩm không?
+-  Những yếu tố nào ảnh hưởng đến chất lượng màng (nhiệt độ, tỉ lệ glycerol…)? 
+-  Màng học từ tinh bột có thể thay thế màng nilon trong bảo quản thực phẩn hay không?
+1.9. Giả thuyết khoa học
+       Tinh bột củ chuối khi được hồ hóa và kết hợp với chất hóa dẻo (glycerol) có thể tạo thành màng mỏng, dẻo, có khả năng phân hủy sinh học và sử dụng làm màng bọc thực phẩm.
+1.10. Phương pháp nghiên cứu
+        Để hoàn thành dự án, nhóm chúng em triển khai qua 4 bước phương pháp cụ thể sau:
+  -  Phương pháp thực nghiệm (Làm thí nghiệm): Đây là bước quan trọng nhất. Nhóm tiến hành chiết tách tinh bột từ củ chuối bằng cách xay nhỏ, lọc lấy nước cốt và lắng lấy tinh bột tinh khiết. Sau đó, nhóm thực hiện pha chế hỗn hợp tinh bột với các chất phụ gia an toàn (như glycerin) và gia nhiệt để tạo thành dung dịch dẻo. Cuối cùng là công đoạn đổ khuôn và sấy khô để hình thành màng bọc.
+  -  Phương pháp quan sát và so sánh: Sau khi có sản phẩm, nhóm tiến hành kiểm tra bằng mắt thường và các tác động vật lý cơ bản. Chúng em đặt màng bọc từ củ chuối bên cạnh màng bọc nilon thông thường để so sánh về độ trong suốt, khả năng bám dính. Đồng thời, nhóm thực hiện các bài thử nghiệm nhỏ như kéo giãn màng để đánh giá độ dẻo và treo vật nặng để thử độ bền của sản phẩm.
+  -  Phương pháp phân tích và đánh giá: Từ kết quả thực nghiệm, nhóm cùng nhau phân tích vai trò của từng thành phần. Ví dụ: Nếu màng quá giòn, nhóm sẽ phân tích xem có phải do thiếu chất tạo dẻo hay không; hoặc nếu màng khó tạo hình, nhóm sẽ đánh giá lại hàm lượng tinh bột. Việc này giúp nhóm tìm ra "công thức vàng" cho sản phẩm.
+   -  Phương pháp tra cứu tài liệu: Để có cơ sở lý thuyết vững chắc, nhóm sử dụng sách giáo khoa (đặc biệt là kiến thức về phương pháp chiết tách chất hữu cơ, Polymer và Cacbohidrat trong chương trình KHTN 9, và Hóa học 12) kết hợp với tìm kiếm thông tin trên Internet. Việc tra cứu giúp nhóm học tập kinh nghiệm từ những nghiên cứu đi trước và hiểu rõ hơn về các tiêu chuẩn an toàn thực phẩm. 
+PHẦN 2. NỘI DUNG NGHIÊN CỨU
+2.1. Cơ sở khoa học (các Kiến thức STEM đã vận dụng)
+2.1.1. Kiến thức thuộc lĩnh vực Khoa học (Science): 
++ Hóa học: Tính chất của tinh bột (C₆H₁₀O₅)n cụ thể:
+-  Hiện tượng hồ hóa tinh bột khi đun nóng 
+-  Liên kết hydro giữa các phân tử tinh bột tạo màng 
+-  Vai trò của glycerol: làm giảm lực liên kết → tăng độ dẻo 
+-  Phương pháp tách tinh bột từ củ chuối.
++ Vật lí:
+-  Quá trình bay hơi nước khi làm khô.
+-  Sự hình thành màng mỏng do lực liên kết phân tử.
+-  Độ dẻo, độ bền cơ học của vật liệu 
++ Sinh học:
+- Thành phần các chất có trong củ chuối.
+-  Khả năng phân hủy sinh học nhờ vi sinh vật 
+2.1.2. Kiến thức thuộc lĩnh vực Công nghệ (Technology)
+-  Nghiên cứu và ứng dụng quy trình sản xuất vật liệu sinh học 
+-  Sử dụng thiết bị: máy xay, bếp nhiệt 
+-  Kỹ thuật xử lý nguyên liệu nông nghiệp.
+Ngoài ra còn sử dụng công nghệ thông tin, các phần mềm và ứng dụng trong việc tra cứu thông tin, ghi hình, viết báo cáo đề tài.
+2.1.3. Kiến thức thuộc lĩnh vực Kỹ thuật (Engineering)
+- Thiết kế quy trình tạo màng.
+-  Điều chỉnh tỉ lệ nguyên liệu để tối ưu sản phẩm. 
+-  Tạo khuôn và kiểm soát độ dày màng.
+-  Giải quyết vấn đề thực tế: thay thế nhựa (PE và PVC)
+2.1.4. Kiến thức thuộc lĩnh vực Toán học (Mathematics)
+-  Tính toán tỉ lệ: tinh bột : nước : glycerol để tạo ra sản phẩm chất lượng tốt.
+-  Đo độ dày màng (mm).
+-  So sánh kết quả giữa các mẫu.
+-  Xử lý số liệu thực nghiệm
+2.2. Nguyên vật liệu và dụng cụ (các em thêm hình ảnh vào nhé)
+       Nguyên liệu:
+-	Củ chuối 
+-	Nước 
+-	Glycerol (hoặc dầu ăn thay thế) 
+-	Chanh (nước chanh tạo môi trường acid nhẹ) 
+      Dụng cụ:
+-	Máy xay 
+-	Rây lọc 
+-	Bếp gas
+-	Nồi inod 
+-	Cốc thủy tinh 
+-	Muỗng khuấy
+-	Khuôn đổ màng
+2.3. Quy trình thực hiện (các em thêm hình ảnh các bước làm và sản phẩm vào nhé)
+Sản phẩm được tạo thành qua các bước sau: 
+Bước 1: Tách tinh bột
+-  Củ chuối rửa sạch, xay nhuyễn
+-  Lọc qua vải → thu dịch
+-  Để lắng → thu tinh bột nhiều lần cho tinh khiết
+Bước 2: Chuẩn bị dung dịch tạo màng
+-  Hòa tinh bột với nước
+-  Thêm glycerol (chất hóa dẻo)
+-  Thêm vài giọt chanh
+Bước 3: Gia nhiệt
+-  Đun ở 70–90°C
+-  Khuấy đều đến khi dung dịch sánh
+Bước 4: Tạo màng
+-  Đổ dung dịch lên khuôn
+-  Phơi khô tự nhiên 
+Bước 5: Đóng gói, bảo quản, kiểm định
+-  Đóng gói, bảo quản nơi khô ráo.
+-  Kiểm tra độ bền, độ dẻo, khả năng phân hủy và an toàn vệ sinh.
+Bước 6: Hoàn thiện sản phẩm, sử dụng
+
+(các em thiết kế các bước thành sơ đồ rồi đưa vào đây)
+
+2.4. Nghiên cứu thực nghiệm kiểm định chất lượng màng bọc thực phẩm
+   2.4.1. Thiết kế thí nghiệm kiểm định chất lượng màng bọc thực phẩm 
+       Để kiểm định chất lượng màng bọc thực phẩm thu được, chúng em đã thực hiện thiết kế thí nghiệm khoa học như sau: tiến hành xác định 4 chỉ số của màng bọc thực phẩm: Độ bền kéo, độ giãn và thời gian phân hủy và khả năng chống nước theo tỉ lệ glycerol (chất hóa dẻo) để từ đó tìm ra tỉ lệ tạo ra sản phẩm tối ưu nhất. Cụ thể:
+Bước 1: Chúng em tiến hành tạo 3 mẫu màng bọc thực phẩm với các giá trị sau không thay đổi: 
+•	Khối lượng tinh bột: 10g 
+•	Thể tích nước: 100 ml 
+•	Nhiệt độ: 70°C 
+•	Thời gian sấy: 24h 
+Tỉ lệ glycerol (chất hóa dẻo) thay đổi trong 3 mẫu:
+Mẫu A: 1 ml 
+Mẫu B: 2 ml 
+Mẫu C: 3 ml 
+Bước 2: Thực nghiệm đo với từng mẫu lần lượt các chỉ số:
+-	  Độ bền kéo (N/cm²) 
+-	  Độ giãn (%) 
+-	 Thời gian phân hủy (ngày) 
+-	  Khả năng chống nước
+Bước 3: Phân tích kết quả thực nghiệm thu được
+     2.4.2. Kết quả kiểm định chất lượng màng bọc thực phẩm 
+        a. Tính chất màng
+          Kết quả thực nghiệm thu được như sau:
+Mẫu	Glycerol (ml)	Độ bền kéo (N/cm²)	Độ giãn (%)	Độ dẻo	Nhận xét
+A	1	Nhiều nhất	5%	Thấp	Dễ gãy
+B	2	Trung bình	15%	Trung bình	Tốt
+C	3	Ít nhất	35%	Cao	Rất dẻo
+Bảng 1: Ảnh hưởng của glycerol đến tính chất màng
+        Như vậy với bảng trên chúng em thấy rằng khi tăng glycerol thì tăng độ dẻo nhưng giảm độ bền. Do đó mẫu B là tối ưu nhất.
+      b. Khả năng phân hủy sinh học
+        Kết quả thực nghiệm thu được như sau:
+Loại màng	Thời gian phân hủy	Môi trường
+Màng chuối	15–20 ngày	Đất ẩm
+Túi nilon	> 100 năm	Tự nhiên
+Bảng 2: Khả năng phân hủy sinh học
+       Màng bọc được nhóm tạo ra có thời gian phân hủy rất ngắn, cả 3 mẫu thời gian phân hủy lâu nhất là 20 ngày và khi phân hủy có thể tạo thành chất dinh dưỡng cung cấp cho đất nên thân thiện với môi trường hơn so với các sản phẩm cùng loại từ nilon.
+      c. Khả năng chống nước
+        Kết quả thực nghiệm thu được như sau:
+Mẫu	Thời gian bắt đầu tan (phút)
+A	10
+B	15
+C	20
+Bảng 3: Khả năng chống nước
+        Bảng trên cho thấy: tỉ lệ Glycerol cao thì khả năng giữ nước tốt hơn nhưng sản phẩm vẫn hạn chế về khả năng chống nước.
+2.4.3.  So sánh sản phẩm với sản phẩm thị trường
+Tiêu chí	Màng chuối	Màng PE
+Nguồn gốc	Sinh học	Dầu mỏ
+Phân hủy	Có	Không
+Độ bền	Trung bình	Cao
+An toàn thực phẩm	Cao	Có nguy cơ
+Giá thành	Thấp	Trung bình
+Bảng 4: So sánh với màng nhựa PE
+2.4.4.  Đánh giá sản phẩm
+Tiêu chí	Thang điểm	Kết quả
+Độ bền	10	7
+Độ dẻo	10	8
+Thân thiện môi trường	10	10
+Tính ứng dụng	10	7
+Bảng 5: Thang đánh giá sản phẩm
+       Với thang điểm trên chúng em tự đánh giá được sản phẩm màng bọc thực phẩm từ củ chuối đạt 32/40 điểm (tốt). 
+2.5. Công dụng của sản phẩm
+        Màng bọc thực phẩm từ củ chuối mang lại những lợi ích thiết thực trong đời sống và môi trường cụ thể như sau:
+  -  Sản phẩm được dùng để bọc trực tiếp các loại thực phẩm như rau xanh, trái cây và các loại bánh khô. Lớp màng giúp thực phẩm tránh được bụi bẩn, vi khuẩn từ môi trường bên ngoài, đồng thời giữ cho rau củ tươi lâu hơn nhờ khả năng hạn chế sự thoát hơi nước quá nhanh.
+  -  Với độ dẻo dai vừa phải, màng bọc từ củ chuối hoàn toàn có thể thay thế các loại túi nilon hoặc màng nhựa dùng một lần trong việc bao gói thực phẩm sử dụng hằng ngày, phù hợp cho những nhu cầu lưu trữ thực phẩm trong thời gian ngắn tại các hộ gia đình hoặc canteen nhà trường.
+  -  Điểm khác biệt lớn nhất là sản phẩm có nguồn gốc 100% từ tự nhiên, có thể phân hủy hoàn toàn sau khi sử dụng mà không giải phóng các chất độc hại hay hạt vi nhựa. Việc sử dụng sản phẩm này không chỉ giúp giảm lượng rác thải nhựa tại địa phương mà còn góp phần thay đổi thói quen tiêu dùng, hướng đến một cộng đồng bảo vệ môi trường bền vững.
+ 
+PHẦN 3. KẾT QUẢ NGHIÊN CỨU
+3.1. Kết quả nghiên cứu 
+      Sau quá trình thực nghiệm và kiểm chứng, nhóm nghiên cứu đã đạt được những kết quả cụ thể như sau:
+- Về cảm quan (Hình thức): Nhóm đã chế tạo thành công lớp màng mỏng, bề mặt mịn màng. Màng có màu hơi trắng đục đặc trưng của tinh bột tự nhiên, không có mùi lạ, đảm bảo tính thẩm mỹ khi sử dụng.
+- Về tính chất vật lý: Nhờ sự hỗ trợ của chất hóa dẻo (glycerol), sản phẩm thu được có độ dẻo dai nhất định. Màng có thể kéo giãn nhẹ mà không bị rách ngay, giúp việc bao gói thực phẩm trở nên dễ dàng hơn.
+- Về khả năng ứng dụng: Qua thử nghiệm thực tế, màng bọc phát huy hiệu quả tốt nhất khi dùng để bảo quản các loại thực phẩm khô hoặc trái cây có vỏ. Màng bám dính khá tốt trên bề mặt vật dụng, giúp ngăn chặn bụi bẩn và hạn chế sự tiếp xúc trực tiếp của không khí với thực phẩm.
+- Về tính thân thiện môi trường: Đây là kết quả ấn tượng nhất của đề tài. Khi đem chôn trong môi trường đất tự nhiên, màng bọc có khả năng tự phân hủy hoàn toàn trong thời gian ngắn. Sản phẩm không để lại các mảnh vụn nhựa khó phân hủy, góp phần giảm thiểu ô nhiễm môi trường đúng như mục tiêu ban đầu đề ra.
+Như vậy, Sản phẩm bước đầu đã chứng minh được tiềm năng của củ chuối trong việc tạo ra sản phẩm thay thế nhựa dùng một lần. Tuy vẫn còn cần cải thiện thêm về độ trong suốt và khả năng chống thấm nước, nhưng đây hoàn toàn là một giải pháp "vật liệu xanh" khả thi và gần gũi với đời sống nông nghiệp địa phương.
+3.2. Ưu điểm và hạn chế của sản phẩm
+      Sau quá trình nghiên cứu và thực nghiệm, nhóm đã đúc kết được các đặc điểm nổi bật cũng như những điểm cần cải thiện của sản phẩm như sau:
+      3.2.1. Ưu điểm 
+  -  Nguyên liệu không tốn tiền và sẵn có: Sản phẩm tận dụng củ chuối – một phụ phẩm nông nghiệp rất phổ biến và hầu như không tốn chi phí mua sắm tại địa phương nên giá thành sản xuất rất thấp.
+  -  An toàn và thân thiện với môi trường: Vì được làm hoàn toàn từ tinh bột tự nhiên và các chất hỗ trợ hữu cơ, màng bọc tuyệt đối an toàn khi tiếp xúc với thực phẩm. Sau khi dùng, màng tự phân hủy nhanh chóng, không để lại rác thải nhựa.
+  -  Quy trình đơn giản, dễ triển khai: Các bước thực hiện không đòi hỏi máy móc phức tạp hay hóa chất độc hại, rất phù hợp để triển khai thực hành ngay tại nhà.
+      3.2.2. Hạn chế 
+  -  Độ bền vật lý chưa tối ưu: So với màng bọc nilon công nghiệp, màng từ củ chuối vẫn có độ dai và khả năng co giãn thấp hơn, dễ bị rách nếu kéo căng quá mức.
+  -  Nhạy cảm với độ ẩm: Do có nguồn gốc từ tinh bột, màng có đặc tính dễ hút ẩm và tan trong nước. Vì vậy, sản phẩm hiện tại chưa phù hợp để bọc các loại thực phẩm có nước hoặc thực phẩm đang quá ướt.
+ -  Khó bảo quản trong thời gian dài: Trong điều kiện môi trường bình thường, màng dễ bị ảnh hưởng bởi độ ẩm không khí, dẫn đến tình trạng bị khô giòn hoặc biến chất nếu không được lưu trữ đúng cách.
+Dùng để trình bày khi thuyết trình ( ghi ra rồi xóa đi nhé): "Dù còn một số hạn chế về độ bền và tính chống thấm, nhưng đây chính là động lực để nhóm tiếp tục nghiên cứu, tìm kiếm thêm các chất gia cường tự nhiên (như sáp ong hay tinh dầu) để hoàn thiện sản phẩm hơn trong tương lai."
+3.3. Khó khăn gặp phải trong quá trình thực hiện
+        Dù đã chuẩn bị kỹ lưỡng, nhóm vẫn gặp phải một số khó khăn về kỹ thuật thực nghiệm trong quá trình chế tạo sản phẩm:
+  -  Khó khăn trong việc kiểm soát độ đồng nhất của màng: Do dụng cụ đổ khuôn thủ công chưa đạt độ chính xác cao, nhóm gặp khó khăn trong việc dàn trải dung dịch sao cho thật đều. Kết quả là màng thu được thường có độ dày mỏng không đồng đều giữa các vị trí, ảnh hưởng đến tính thẩm mỹ và khả năng bám dính của sản phẩm.
+  -  Trở ngại trong công đoạn thu hồi sản phẩm (bóc màng): Một trong những thách thức lớn nhất là khi màng đã khô, việc tách màng ra khỏi khuôn thường gây ra tình trạng rách hoặc thủng. Nguyên nhân là do màng bám khá chắc vào bề mặt khuôn, trong khi độ bền cơ học của vật liệu tinh bột tự nhiên vẫn còn hạn chế, đòi hỏi thao tác phải cực kỳ khéo léo và tỉ mỉ.
+  -  Hạn chế về độ tinh khiết của nguyên liệu đầu vào: Quá trình chiết tách tinh bột từ củ chuối bằng phương pháp lắng lọc thủ công khó có thể loại bỏ hoàn toàn nhựa chuối nên tinh bột thu được chưa đạt độ tinh khiết tuyệt đối, khiến màng bọc thành phẩm đôi khi bị đục.
+3.4. Kết luận và kiến nghị về đề tài
+    3.4.1. Kết luận
+    Sau một thời gian nghiên cứu và thực nghiệm nghiêm túc, đề tài “Nghiên cứu chế tạo màng bọc thực phẩm từ củ chuối” đã đạt được những kết quả khả quan:
+  -  Nhóm đã chứng minh được tinh bột chiết xuất từ củ chuối hoàn toàn có khả năng tạo màng sinh học. Đây là một hướng đi mới giúp nâng cao giá trị của cây chuối – loại cây vốn rất gần gũi với bà con nông dân.
+  -  Màng bọc thu được bước đầu đã thể hiện được các tính năng cơ bản của bao bì thực phẩm. Quan trọng hơn, sản phẩm này hoàn toàn phù hợp với định hướng "phát triển bền vững" và lối sống giảm thiểu rác thải nhựa mà cộng đồng đang hướng tới.
+    3.4.2. Kiến nghị 
+       Để sản phẩm hoàn thiện hơn và sớm đi vào đời sống, nhóm xin đưa ra một số kiến nghị như sau:
+  -   Tăng cường độ bền cho màng: Trong các nghiên cứu tiếp theo, chúng em có thể bổ sung thêm các hợp chất hữu cơ tự nhiên như Chitosan (từ vỏ tôm cua) hoặc Gelatin để giúp màng dai hơn, bền hơn và tăng khả năng chống thấm nước của màng.
+  -   Cải tiến quy trình kỹ thuật: Chúng em sẽ tiếp tục nghiên cứu các phương pháp sấy và đổ khuôn hiện đại hơn để kiểm soát tốt độ dày của màng, giúp sản phẩm đạt độ tinh khiết và đồng đều về mặt thẩm mỹ.
+  -   Lan tỏa mô hình học tập STEM: Nhóm kiến nghị nhà trường có thể đưa đề tài này vào các buổi sinh hoạt ngoại khóa hoặc câu lạc bộ khoa học. Việc tự tay chế tạo màng bọc sinh học từ nguyên liệu địa phương không chỉ giúp các bạn học sinh nắm vững kiến thức Hóa học, Sinh học mà còn khơi dậy ý thức bảo vệ môi trường ngay trong trường học.
+ TÀI LIỆU THAM KHẢO
+1.	Sách chuyên đề Hóa học 11 ba bộ sách ( KNTT và CS; Cánh diều, CTST)
+2.	SGK Hóa học 12 ba bộ sách ( KNTT và CS; Cánh diều, CTST)
+3.	Tài liệu về tinh bột và vật liệu sinh học 
+4.	Nguồn internet về bioplastic
+
+ 
+
+ 
+NHẬT KÍ THỰC HIỆN DỰ ÁN
+
+I. THÔNG TIN CHUNG
+Nhóm: ……………… Lớp: 11B5 
+Các thành viên: Lê Thị Diễm Phúc 
+     Nguyễn Thị Thanh Quyên 
+ 			     Đồng Hải Linh 
+Giáo viên hướng dẫn: Nguyễn Lê Thị Đài Trang
+Thời gian thực hiện: 4 tuần 
+II. MỤC TIÊU DỰ ÁN
+    1. Điều chế được màng bọc từ tinh bột củ chuối 
+    2. Đánh giá các tính chất: 
+Độ bền kéo, độ giãn, độ dẻo 
+Độ thấm nước 
+Khả năng phân hủy sinh học 
+3.	So sánh với màng nilon thông thường 
+III. NHẬT KÍ THEO TIẾN ĐỘ (CHI TIẾT THEO TUẦN)
+ TUẦN 1: KHỞI ĐỘNG – NGHIÊN CỨU LÝ THUYẾT
+Ngày	Nội dung công việc	Người thực hiện	Kết quả đạt được	Khó khăn	Điều chỉnh
+1	Xác định vấn đề ô nhiễm nhựa	Cả nhóm	Chọn đề tài	Nhiều hướng	GV định hướng
+2	Tìm hiểu tinh bột củ chuối	Phúc	Có tài liệu	Thiếu nguồn chuẩn	Chọn tài liệu khoa học
+3	Tìm hiểu phương pháp tạo màng	Quyên, Linh	Biết cần glycerol	Chưa rõ tỉ lệ	Tra cứu thêm
+Kết quả tuần 1:
+-	Chọn được quy trình cơ bản: 
+Tinh bột + nước + glycerol + gia nhiệt 
+-	Xây dựng giả thuyết:
+Nếu “Tăng tỉ lệ glycerol thì sẽ tăng độ dẻo nhưng giảm độ bền của màng bọc thực phẩm từ củ chuối” .
+ TUẦN 2: CHIẾT TÁCH TINH BỘT
+Ngày	Nội dung	Người	Kết quả	Số liệu
+1	Nghiền củ chuối	Quyên	Thu dịch nghiền	2 kg nguyên liệu
+2	Lọc và lắng	Phúc	Thu tinh bột ướt	450 g
+3	Sấy khô	Linh	Tinh bột khô	320 g
+ Nhận xét:
+•	Hiệu suất thu tinh bột ≈ 16% 
+•	Tinh bột có màu hơi xám → cần lọc kỹ nhiều lần hơn để tinh bột thu được trắng hơn. 
+TUẦN 3: TẠO MÀNG SINH HỌC
+ 1. Thiết kế thí nghiệm để tạo sản phẩm tối ưu
+Mẫu	Tinh bột (g)	Nước (mL)	Glycerol (mL)
+M1	10	100	1
+M2	10	100	2
+M3	10	100	3
+2.  Nhật kí thực hiện
+Ngày	Nội dung	Kết quả
+1	Gia nhiệt 70–80°C	Dung dịch sệt
+2	Đổ khuôn	Tạo lớp màng
+3	Sấy 24h	Thu màng
+3. Kết quả quan sát
+Mẫu	Độ dẻo	Độ bền	Nhận xét
+M1	Thấp	Cao	Dễ gãy
+M2	Trung bình	Tốt	Tối ưu
+M3	Cao	Thấp	Quá mềm
+TUẦN 4: ĐÁNH GIÁ – SO SÁNH
+ 1. Độ bền kéo (thử nghiệm đơn giản)
+Mẫu	Lực kéo tối đa (N)
+M1	12
+M2	10
+M3	6
+2. Độ thấm nước
+Mẫu	% tăng khối lượng sau 24h
+M1	25%
+M2	30%
+M3	40%
+3. Khả năng phân hủy
+Vật liệu	Thời gian phân hủy
+Màng sinh học	15-20 ngày
+Nilon	> 100 năm
+ 4. So sánh tổng hợp
+Tiêu chí	Màng chuối	Nilon
+An toàn	Cao	Thấp
+Phân hủy	Nhanh	Rất chậm
+Độ bền	Trung bình	Cao
+IV. NHẬT KÍ CÁ NHÂN (điền tên và công việc thêm vào)
+Họ tên	Công việc	Hoàn thành	Tự đánh giá
+	Chiết tinh bột, làm màng….	100%	Tốt
+	Thí nghiệm,….	90%	Khá
+	Ghi số liệu,…	100%	Tốt
+V. TỔNG KẾT DỰ ÁN
+1. Nhóm đã thực hiện thành công:
+-	Tạo được màng sinh học từ tinh bột củ chuối 
+-	Xác định tỉ lệ tối ưu: 10g tinh bột : 2mL glycerol 
+2. Hạn chế của sản phẩm:
+-   Màng còn dễ thấm nước 
+-   Độ bền chưa cao 
+3. Hướng phát triển:
+Có thể bổ sung: Chitosan, tinh dầu để tăng độ bền và chống nước 
+VI. NHẬN XÉT CỦA GIÁO VIÊN
+-	Nhóm đã thực hiện đầy đủ quy trình STEM. 
+-	Nhóm tiến hành nghiên cứu nghiêm túc, có số liệu thực nghiệm rõ ràng.
+-	Nhóm đã tiến hành so sánh khoa học để đưa ra kết luận về sản phẩm.
+Công dụng: Sản phẩm được dùng để bọc trực tiếp các loại thực phẩm như rau xanh, trái cây và các loại bánh khô. Lớp màng giúp thực phẩm tránh được bụi bẩn, vi khuẩn từ môi trường bên ngoài, đồng thời giữ cho rau củ tươi lâu hơn nhờ khả năng hạn chế sự thoát hơi nước quá nhanh.
+Ưu điểm: tận dụng được phế phẩm nông nghiệp tạo ra sản phẩm có giá trị, an toàn với sức khỏe và góp phần bảo vệ môi trường.
+
+

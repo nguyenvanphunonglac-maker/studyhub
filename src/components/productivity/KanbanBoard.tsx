@@ -161,7 +161,7 @@ function TaskCard({ task, onDelete, onMove }: { task: KanbanTask, onDelete: () =
       whileHover={{ y: -4 }}
       className="bg-card p-6 rounded-[32px] shadow-soft border border-border-notion hover:border-accent/10 transition-all group/card relative overflow-hidden"
     >
-      <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+      <div className="absolute top-0 right-0 p-4 flex gap-2">
          <button onClick={onDelete} className="p-2 text-foreground/20 hover:text-error hover:bg-error/10 rounded-xl transition-all"><Trash2 size={14}/></button>
       </div>
 
@@ -176,7 +176,7 @@ function TaskCard({ task, onDelete, onMove }: { task: KanbanTask, onDelete: () =
            <Calendar size={12} />
            <span className="text-[10px] font-bold">{t('recently')}</span>
         </div>
-        <div className="flex gap-1.5 opacity-0 group-hover/card:opacity-100 transition-opacity">
+        <div className="flex gap-1.5">
            {statusFlow[task.status].map(s => (
              <button 
                key={s}
