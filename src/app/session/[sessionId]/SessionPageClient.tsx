@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useState, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { subscribeToSession, subscribeToParticipants } from "@/services/sessionService";
@@ -23,49 +23,73 @@ export default function SessionPageClient({
 }: {
   params: Promise<{ sessionId: string }>;
 }) {
-  const { sessionId } = use(params);
+  // Với static export, params luôn là "_" trên hosting
+  // Phải đọc sessionId thực từ URL
+  const { sessionId: paramSessionId } = use(params);
+  const [sessionId, setSessionId] = useState<string>(paramSessionId);
+
+  useEffect(() => {
+    // Parse sessionId thực từ pathname: /session/{sessionId}
+    const parts = window.location.pathname.split("/");
+    const idx = parts.indexOf("session");
+    if (idx !== -1 && parts[idx + 1] && parts[idx + 1] !== "_") {
+      setSessionId(parts[idx + 1]);
+    }
+  }, []);
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
 
   const [session, setSession] = useState<Session | null>(null);
   const [participants, setParticipants] = useState<ParticipantRecord[]>([]);
   const [sessionLoading, setSessionLoading] = useState(true);
-  const [hasRecord, setHasRecord] = useState<boolean | null>(null);
+  const [participantsLoaded, setParticipantsLoaded] = useState(false);
+  const notFoundTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (!sessionId) return;
+    if (!sessionId || authLoading || !user) return;
+
     const unsubSession = subscribeToSession(sessionId, (s) => {
-      setSession(s);
-      setSessionLoading(false);
+      if (s) {
+        // Session tồn tại — cancel timer nếu đang chạy
+        if (notFoundTimer.current) {
+          clearTimeout(notFoundTimer.current);
+          notFoundTimer.current = null;
+        }
+        setSession(s);
+        setSessionLoading(false);
+      } else {
+        // Session chưa có — chờ 5s, nếu vẫn null thì dừng loading
+        // (onSnapshot sẽ tự gọi lại khi document được tạo)
+        notFoundTimer.current = setTimeout(() => {
+          setSessionLoading(false);
+        }, 5000);
+      }
     });
+
     const unsubParticipants = subscribeToParticipants(sessionId, (records) => {
       setParticipants(records);
+      setParticipantsLoaded(true);
     });
+
     return () => {
       unsubSession();
       unsubParticipants();
+      if (notFoundTimer.current) clearTimeout(notFoundTimer.current);
     };
-  }, [sessionId]);
+  }, [sessionId, authLoading, user?.uid]);
 
+  // Redirect participant không có trong danh sách về /join
   useEffect(() => {
-    if (!user || !session) return;
-    if (user.uid === session.hostId) {
-      setHasRecord(true);
-      return;
-    }
-    const record = participants.find((p) => p.userId === user.uid);
-    setHasRecord(!!record);
-  }, [user, session, participants]);
-
-  useEffect(() => {
-    if (hasRecord === false) {
-      router.replace("/join");
-    }
-  }, [hasRecord, router]);
+    if (!user || !session || sessionLoading || !participantsLoaded) return;
+    if (user.uid === session.hostId) return;
+    const isParticipant = participants.some((p) => p.userId === user.uid);
+    if (!isParticipant) router.replace("/join");
+  }, [user, session, participants, sessionLoading, participantsLoaded, router]);
 
   if (authLoading) return <SessionLoader />;
   if (!user) return <Login />;
-  if (sessionLoading || hasRecord === null) return <SessionLoader />;
+  if (sessionLoading) return <SessionLoader />;
+
   if (!session) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -79,6 +103,11 @@ export default function SessionPageClient({
   if (isHost) {
     return <HostSessionView sessionId={sessionId} hostId={user.uid} />;
   }
+
+  if (!participantsLoaded) return <SessionLoader />;
+
+  const isParticipant = participants.some((p) => p.userId === user.uid);
+  if (!isParticipant) return <SessionLoader />;
 
   return (
     <ParticipantSessionView

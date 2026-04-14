@@ -12,6 +12,10 @@
     ],
     "rewrites": [
       {
+        "source": "/session/**",
+        "destination": "/session/_/index.html"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

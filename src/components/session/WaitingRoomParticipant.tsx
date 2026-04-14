@@ -25,7 +25,7 @@ export default function WaitingRoomParticipant({
 
   useEffect(() => {
     const unsubscribe = subscribeToSession(session.sessionId, (updatedSession) => {
-      if (updatedSession.status === "active") {
+      if (updatedSession?.status === "active") {
         onSessionStart();
       }
     });

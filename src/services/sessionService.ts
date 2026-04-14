@@ -234,12 +234,14 @@ export async function submitAnswers(
 
 export function subscribeToSession(
   sessionId: string,
-  callback: (session: Session) => void
+  callback: (session: Session | null) => void
 ): Unsubscribe {
   const sessionRef = doc(db, SESSIONS, sessionId);
   return onSnapshot(sessionRef, (snap) => {
     if (snap.exists()) {
       callback({ sessionId: snap.id, ...snap.data() } as Session);
+    } else {
+      callback(null);
     }
   });
 }

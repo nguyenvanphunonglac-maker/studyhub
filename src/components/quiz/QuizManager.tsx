@@ -449,39 +449,24 @@ export default function QuizManager() {
                           <p className="text-foreground/40 text-sm font-medium mb-10 line-clamp-2 h-10 leading-relaxed">{set.description || t('no_description')}</p>
                         </div>
                         
-                        <div className="flex items-center justify-between">
-                          <div className="px-4 py-1.5 glass bg-accent/5 rounded-full text-[10px] font-bold uppercase tracking-widest text-accent/70 border border-accent/10">
-                            {set.questions.length} questions
-                          </div>
-                          <div className="flex gap-2 opacity-40 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
-                            <button
-                              onClick={() => handleTogglePublic(set.id!, !!set.isPublic)}
-                              className={cn(
-                                "p-3 rounded-xl transition-all border",
-                                set.isPublic ? "bg-accent text-background border-accent shadow-lg shadow-accent/10" : "bg-active-notion text-accent/40 border-border-notion"
-                              )}
-                            title={set.isPublic ? t('sharing') : t('share_community')}
-                            >
-                              <BookOpen size={16} />
-                            </button>
-                            <SharedSessionButton quizSet={set} />
-                            <button
-                              onClick={() => {
-                                setEditingSet(set);
-                                setActiveTab("quiz");
-                              }}
-                              className="p-3 bg-success/10 text-success rounded-xl border border-success/10 hover:bg-success hover:text-background transition-all"
-                            >
-                              <Play size={16} fill="currentColor" />
-                            </button>
+                        <div className="flex flex-col gap-3">
+                          <div className="flex items-center justify-between">
+                            <div className="px-4 py-1.5 glass bg-accent/5 rounded-full text-[10px] font-bold uppercase tracking-widest text-accent/70 border border-accent/10">
+                              {set.questions.length} questions
+                            </div>
+                            {/* Public toggle + delete — luôn hiển thị */}
                             <div className="flex gap-2">
-                              <button 
-                                onClick={() => setEditingSet(set)}
-                                className="p-3 bg-active-notion text-accent/40 hover:text-accent rounded-xl border border-border-notion transition-all"
+                              <button
+                                onClick={() => handleTogglePublic(set.id!, !!set.isPublic)}
+                                className={cn(
+                                  "p-2.5 rounded-xl transition-all border",
+                                  set.isPublic ? "bg-accent text-background border-accent" : "bg-active-notion text-accent/40 border-border-notion"
+                                )}
+                                title={set.isPublic ? t('sharing') : t('share_community')}
                               >
-                                <History size={16} />
+                                <BookOpen size={15} />
                               </button>
-                              <button 
+                              <button
                                 onClick={() => {
                                   setConfirmDelete({
                                     open: true,
@@ -491,11 +476,28 @@ export default function QuizManager() {
                                     }
                                   });
                                 }}
-                                className="p-3 bg-error/5 text-error rounded-xl border border-error/10 hover:bg-error hover:text-background transition-all"
+                                className="p-2.5 bg-error/5 text-error rounded-xl border border-error/10 hover:bg-error hover:text-background transition-all"
                               >
-                                <Trash2 size={16} />
+                                <Trash2 size={15} />
                               </button>
                             </div>
+                          </div>
+
+                          {/* Action buttons — luôn hiển thị, wrap trên mobile */}
+                          <div className="flex flex-wrap gap-2">
+                            <SharedSessionButton quizSet={set} />
+                            <button
+                              onClick={() => { setEditingSet(set); setActiveTab("quiz"); }}
+                              className="flex items-center gap-1.5 flex-1 justify-center px-3 py-2.5 bg-success/10 text-success rounded-xl border border-success/10 hover:bg-success hover:text-background transition-all text-xs font-bold"
+                            >
+                              <Play size={14} fill="currentColor" /> Làm bài
+                            </button>
+                            <button
+                              onClick={() => setEditingSet(set)}
+                              className="flex items-center gap-1.5 flex-1 justify-center px-3 py-2.5 bg-active-notion text-accent/60 hover:text-accent rounded-xl border border-border-notion transition-all text-xs font-bold"
+                            >
+                              <History size={14} /> Xem đề
+                            </button>
                           </div>
                         </div>
                       </div>
