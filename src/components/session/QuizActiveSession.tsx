@@ -227,7 +227,7 @@ export default function QuizActiveSession({
                 onClick={() => selectOption(idx)}
                 className={`w-full text-left px-5 py-4 rounded-xl border transition-colors text-sm font-medium ${
                   isSelected
-                    ? "border-primary bg-primary/10 text-primary"
+                    ? "border-blue-500 bg-blue-500/10 text-blue-600 dark:text-blue-400"
                     : "border-border bg-foreground/5 text-foreground hover:bg-foreground/10"
                 }`}
               >
@@ -254,7 +254,7 @@ export default function QuizActiveSession({
         {!isLast ? (
           <button
             onClick={goToNext}
-            className="flex-1 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity"
+            className="flex-1 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:opacity-90 transition-opacity"
           >
             Câu tiếp theo
           </button>

@@ -3,13 +3,13 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { flashcardService, Flashcard, FlashcardSet } from "@/services/flashcardService";
-import { Plus, Trash2, BookOpen, Layers, History, Play, CheckCircle2, XCircle, ChevronRight, Search, FileUp, Edit3, Sparkles, Brain, Puzzle, PenLine, LayoutGrid, Zap, Loader2 } from "lucide-react";
+import { Plus, Trash2, BookOpen, Layers, History, Play, CheckCircle2, XCircle, ChevronRight, Search, FileUp, Edit3, Sparkles, Brain, Puzzle, PenLine, LayoutGrid, Zap, Loader2, Download, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { subjects } from "@/context/LanguageContext";
 import { Timestamp } from "firebase/firestore";
 import { auth } from "@/lib/firebase";
-import { cn } from "@/lib/utils";
+import { cn, downloadCsvFile } from "@/lib/utils";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import PageShell from "../layout/PageShell";
 import dynamic from "next/dynamic";
@@ -37,6 +37,9 @@ export default function FlashcardManager() {
   const [front, setFront] = useState("");
   const [back, setBack] = useState("");
   const [editingCardIdx, setEditingCardIdx] = useState<number | null>(null);
+  const [showTextImport, setShowTextImport] = useState(false);
+  const [textImportValue, setTextImportValue] = useState("");
+  const [textImportError, setTextImportError] = useState("");
 
   useEffect(() => {
     if (!user || !auth.currentUser) return;
@@ -151,6 +154,52 @@ export default function FlashcardManager() {
     });
   };
 
+  const downloadFlashcardCsvSample = () => {
+    downloadCsvFile("flashcards-sample.csv", ["front", "back"], [["Tháp Eiffel ở đâu?", "Paris"]]);
+  };
+
+  const handleTextImport = async () => {
+    if (!user || !editingSet || !textImportValue.trim()) return;
+    setTextImportError("");
+    const lines = textImportValue.trim().split("\n").filter(l => l.trim());
+    const parsed: Flashcard[] = [];
+    const errors: string[] = [];
+
+    lines.forEach((line, i) => {
+      const parts = line.split(";").map(p => p.trim());
+      if (parts.length < 2) {
+        errors.push(`Dòng ${i + 1}: thiếu cột (cần: Mặt trước;Mặt sau)`);
+        return;
+      }
+      const [front, back] = parts;
+      if (!front || !back) {
+        errors.push(`Dòng ${i + 1}: mặt trước hoặc mặt sau bị trống`);
+        return;
+      }
+      parsed.push({
+        front,
+        back,
+        easeFactor: 2.5,
+        interval: 0,
+        repetitions: 0,
+        nextReview: Timestamp.now(),
+        userId: user.uid,
+        tags: [],
+        subject: editingSet.subject || "Khác",
+      });
+    });
+
+    if (errors.length > 0) {
+      setTextImportError(errors.join("\n"));
+      return;
+    }
+
+    const updated = [...editingSet.cards, ...parsed];
+    await flashcardService.updateCardsInSet(user.uid, editingSet.id!, updated);
+    setTextImportValue("");
+    setShowTextImport(false);
+  };
+
   if (activeView === "review" && editingSet) {
     return <FlashcardReview set={editingSet} onExit={() => setActiveView("list")} />;
   }
@@ -229,25 +278,77 @@ export default function FlashcardManager() {
 
         {editingSet ? (
           <section className="animate-in fade-in slide-in-from-bottom-5 duration-500">
-            <div className="flex items-center justify-between mb-10">
+            <div className="flex flex-col gap-4 mb-10">
               <h2 className="text-xs font-bold text-foreground/30 uppercase tracking-[0.2em]">
                 Thẻ đang có ({editingSet.cards.length})
               </h2>
-              <div className="flex gap-3">
-                <label className="flex items-center gap-2 bg-active-notion text-accent px-5 py-2.5 rounded-xl text-xs font-bold border border-border-notion hover:bg-accent/5 transition-all cursor-pointer">
-                  <FileUp size={16} />
-                  Import CSV
+              <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-3">
+                <label className="flex items-center justify-center gap-2 bg-active-notion text-accent px-4 py-2.5 rounded-xl text-xs font-bold border border-border-notion hover:bg-accent/5 transition-all cursor-pointer">
+                  <FileUp size={15} />
+                  {t('import_csv')}
                   <input type="file" accept=".csv" className="hidden" onChange={handleFileUpload} />
                 </label>
+                <button
+                  type="button"
+                  onClick={downloadFlashcardCsvSample}
+                  className="flex items-center justify-center gap-2 bg-active-notion/40 text-accent px-4 py-2.5 rounded-xl text-xs font-bold border border-border-notion hover:bg-accent/5 transition-all"
+                >
+                  <Download size={15} />
+                  {t('csv_sample_download')}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setShowTextImport(v => !v); setTextImportError(""); }}
+                  className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold border transition-all ${showTextImport ? "bg-accent/10 text-accent border-accent/20" : "bg-active-notion text-accent border-border-notion hover:bg-accent/5"}`}
+                >
+                  <Layers size={15} />
+                  Nhập nhanh
+                </button>
                 <button 
                   onClick={() => setIsAddingCard(true)}
-                  className="flex items-center gap-2 bg-active-notion text-accent px-5 py-2.5 rounded-xl text-xs font-bold border border-border-notion hover:bg-accent/5 transition-all"
+                  className="flex items-center justify-center gap-2 bg-accent text-background px-4 py-2.5 rounded-xl text-xs font-bold border border-accent hover:opacity-90 transition-all"
                 >
                   <Plus size={18} />
                   Thêm thẻ mới
                 </button>
               </div>
+              <p className="text-[11px] text-foreground/50">{t('flashcards_csv_help')}</p>
             </div>
+
+            {showTextImport && (
+              <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="mt-2 mb-6 p-6 glass rounded-[24px] border border-accent/20 shadow-xl">
+                <div className="mb-3 flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-bold text-accent uppercase tracking-widest">Nhập nhanh nhiều thẻ</p>
+                    <p className="text-[11px] text-foreground/40 mt-1">Mỗi dòng một thẻ: <span className="font-mono text-accent/60">Mặt trước;Mặt sau</span></p>
+                  </div>
+                  <button onClick={() => { setShowTextImport(false); setTextImportError(""); setTextImportValue(""); }} className="p-1.5 text-foreground/30 hover:text-accent transition-colors">
+                    <X size={16} />
+                  </button>
+                </div>
+                <textarea
+                  value={textImportValue}
+                  onChange={e => { setTextImportValue(e.target.value); setTextImportError(""); }}
+                  className="w-full p-4 bg-active-notion/40 border border-border-notion rounded-2xl outline-none font-mono text-sm text-accent placeholder:text-foreground/20 focus:ring-1 focus:ring-accent/20 transition-all resize-y"
+                  placeholder={"Tháp Eiffel ở đâu?;Paris\nNước sôi ở bao nhiêu độ C?;100 độ C\nThủ đô Việt Nam là gì?;Hà Nội"}
+                  rows={6}
+                />
+                {textImportError && (
+                  <pre className="mt-2 text-[11px] text-error bg-error/5 rounded-xl p-3 font-mono whitespace-pre-wrap">{textImportError}</pre>
+                )}
+                <div className="flex justify-end gap-3 mt-4">
+                  <button onClick={() => { setShowTextImport(false); setTextImportError(""); setTextImportValue(""); }} className="px-5 py-2 text-foreground/40 font-bold uppercase text-[10px] tracking-widest">Hủy</button>
+                  <button
+                    onClick={handleTextImport}
+                    disabled={!textImportValue.trim()}
+                    className="flex items-center gap-2 bg-accent text-background px-8 py-2.5 rounded-xl font-bold uppercase text-[10px] tracking-widest shadow-lg hover:opacity-90 disabled:opacity-30 transition-all"
+                  >
+                    <Plus size={14} />
+                    Thêm thẻ
+                  </button>
+                </div>
+              </motion.div>
+            )}
 
             {isAddingCard && (
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-10 p-10 glass rounded-[32px] shadow-2xl border-border-notion/50">
@@ -302,7 +403,7 @@ export default function FlashcardManager() {
                         {card.nextReview.toDate().toLocaleDateString()}
                       </span>
                     </div>
-                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                    <div className="flex gap-2">
                       <button 
                         onClick={() => {
                           setFront(card.front);
@@ -411,38 +512,38 @@ export default function FlashcardManager() {
                       <div className="px-4 py-1.5 glass bg-accent/5 rounded-full text-[10px] font-bold uppercase tracking-widest text-accent/70 border border-accent/10">
                         {set.cards.length} cards
                       </div>
-                      <div className="flex gap-2 opacity-40 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
+                      <div className="flex flex-wrap gap-1.5 justify-end max-w-[60%]">
                         <button 
                           onClick={(e) => { e.stopPropagation(); handleTogglePublic(set.id!, !!set.isPublic); }}
                           className={cn(
-                            "p-3 rounded-xl transition-all border",
+                            "p-2.5 rounded-xl transition-all border",
                             set.isPublic ? "bg-accent text-background border-accent" : "bg-active-notion text-accent/40 border-border-notion"
                           )}
                         >
-                          <BookOpen size={16} />
+                          <BookOpen size={14} />
                         </button>
                         <button 
                           onClick={(e) => { e.stopPropagation(); setEditingSet(set); setActiveView("review"); }}
-                          className="p-3 bg-success/10 text-success rounded-xl border border-success/10 hover:bg-success hover:text-background transition-all"
+                          className="p-2.5 bg-success/10 text-success rounded-xl border border-success/10 hover:bg-success hover:text-background transition-all"
                           title="Ôn luyện"
                         >
-                          <Play size={16} fill="currentColor" />
+                          <Play size={14} fill="currentColor" />
                         </button>
                         <button onClick={(e) => { e.stopPropagation(); setEditingSet(set); setActiveView("write"); }}
-                          className="p-3 bg-accent/10 text-accent rounded-xl border border-accent/10 hover:bg-accent hover:text-background transition-all" title="Write">
-                          <PenLine size={16} />
+                          className="p-2.5 bg-accent/10 text-accent rounded-xl border border-accent/10 hover:bg-accent hover:text-background transition-all" title="Write">
+                          <PenLine size={14} />
                         </button>
                         <button onClick={(e) => { e.stopPropagation(); setEditingSet(set); setActiveView("match"); }}
-                          className="p-3 bg-warning/10 text-warning rounded-xl border border-warning/10 hover:bg-warning hover:text-background transition-all" title="Match">
-                          <Puzzle size={16} />
+                          className="p-2.5 bg-warning/10 text-warning rounded-xl border border-warning/10 hover:bg-warning hover:text-background transition-all" title="Match">
+                          <Puzzle size={14} />
                         </button>
                         <button onClick={(e) => { e.stopPropagation(); setEditingSet(set); setActiveView("sort"); }}
-                          className="p-3 bg-purple-500/10 text-purple-400 rounded-xl border border-purple-500/10 hover:bg-purple-500 hover:text-background transition-all" title="Khối hộp">
-                          <LayoutGrid size={16} />
+                          className="p-2.5 bg-purple-500/10 text-purple-400 rounded-xl border border-purple-500/10 hover:bg-purple-500 hover:text-background transition-all" title="Khối hộp">
+                          <LayoutGrid size={14} />
                         </button>
                         <button onClick={(e) => { e.stopPropagation(); setEditingSet(set); setActiveView("blast"); }}
-                          className="p-3 bg-error/10 text-error rounded-xl border border-error/10 hover:bg-error hover:text-background transition-all" title="Blast">
-                          <Zap size={16} />
+                          className="p-2.5 bg-error/10 text-error rounded-xl border border-error/10 hover:bg-error hover:text-background transition-all" title="Blast">
+                          <Zap size={14} />
                         </button>
                         <button 
                           onClick={(e) => { e.stopPropagation(); setConfirmDelete({
@@ -452,9 +553,9 @@ export default function FlashcardManager() {
                               setConfirmDelete({ open: false, onConfirm: () => {} });
                             }
                           }); }}
-                          className="p-3 bg-error/5 text-error rounded-xl border border-error/10 hover:bg-error hover:text-background transition-all"
+                          className="p-2.5 bg-error/5 text-error rounded-xl border border-error/10 hover:bg-error hover:text-background transition-all"
                         >
-                          <Trash2 size={16} />
+                          <Trash2 size={14} />
                         </button>
                       </div>
                     </div>

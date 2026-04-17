@@ -3,12 +3,12 @@
 import { useState, useEffect, useCallback, memo } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { quizService, Question, QuizResult, QuizSet, QuizAnswer } from "@/services/quizService";
-import { Plus, Trash2, FileUp, Play, CheckCircle2, XCircle, History, ChevronRight, LayoutList, BookOpen, Sparkles, Trophy, Image as ImageIcon, X, Loader2 } from "lucide-react";
+import { Plus, Trash2, FileUp, Play, CheckCircle2, XCircle, History, ChevronRight, LayoutList, BookOpen, Sparkles, Trophy, Image as ImageIcon, X, Loader2, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { auth } from "@/lib/firebase";
 import { subjects } from "@/context/LanguageContext";
-import { cn, cleanObject } from "@/lib/utils";
+import { cn, cleanObject, downloadCsvFile } from "@/lib/utils";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import PageShell from "../layout/PageShell";
 import SharedSessionButton from "@/components/session/SharedSessionButton";
@@ -41,6 +41,9 @@ export default function QuizManager() {
   const [selectedSubject, setSelectedSubject] = useState<string>("");
   const [confirmDelete, setConfirmDelete] = useState<{ open: boolean; onConfirm: () => void }>({ open: false, onConfirm: () => {} });
   const [shuffleEnabled, setShuffleEnabled] = useState(true);
+  const [showTextImport, setShowTextImport] = useState(false);
+  const [textImportValue, setTextImportValue] = useState("");
+  const [textImportError, setTextImportError] = useState("");
 
   useEffect(() => {
     if (!user || !auth.currentUser) return;
@@ -152,6 +155,61 @@ export default function QuizManager() {
     }
   };
 
+  const downloadQuizCsvSample = () => {
+    downloadCsvFile(
+      "quiz-sample.csv",
+      ["question", "option1", "option2", "option3", "option4", "correct"],
+      [["Màu trời là gì?", "Đỏ", "Xanh", "Vàng", "Tím", "2"]]
+    );
+  };
+
+  const handleTextImport = async () => {
+    if (!user || !editingSet || !textImportValue.trim()) return;
+    setTextImportError("");
+    const lines = textImportValue.trim().split("\n").filter(l => l.trim());
+    const parsed: Question[] = [];
+    const errors: string[] = [];
+
+    lines.forEach((line, i) => {
+      const parts = line.split(";").map(p => p.trim());
+      if (parts.length < 6) {
+        errors.push(`Dòng ${i + 1}: thiếu cột (cần 6 cột: Câu hỏi;Đáp án 1;Đáp án 2;Đáp án 3;Đáp án 4;Đáp án đúng)`);
+        return;
+      }
+      const [text, opt1, opt2, opt3, opt4, correctRaw] = parts;
+      // correctRaw có thể là số (1-4) hoặc chính nội dung đáp án đúng
+      let correctAnswer = parseInt(correctRaw) - 1;
+      if (isNaN(correctAnswer)) {
+        correctAnswer = [opt1, opt2, opt3, opt4].findIndex(o => o === correctRaw);
+      }
+      if (correctAnswer < 0 || correctAnswer > 3) {
+        errors.push(`Dòng ${i + 1}: đáp án đúng không hợp lệ ("${correctRaw}")`);
+        return;
+      }
+      if (!text) {
+        errors.push(`Dòng ${i + 1}: câu hỏi trống`);
+        return;
+      }
+      parsed.push({
+        text,
+        options: [opt1, opt2, opt3, opt4],
+        correctAnswer,
+        tags: [],
+        subject: editingSet.subject || "Khác",
+      });
+    });
+
+    if (errors.length > 0) {
+      setTextImportError(errors.join("\n"));
+      return;
+    }
+
+    const updatedQs = [...editingSet.questions, ...parsed];
+    await quizService.updateQuestionsInSet(user.uid, editingSet.id!, updatedQs);
+    setTextImportValue("");
+    setShowTextImport(false);
+  };
+
   if (activeTab === "quiz") {
     return <QuizActive questions={editingSet ? editingSet.questions : questions} shuffle={shuffleEnabled} onExit={() => { setActiveTab("sets"); setEditingSet(null); }} />;
   }
@@ -224,15 +282,36 @@ export default function QuizManager() {
               <div className="flex flex-wrap gap-3">
                 <label className="flex items-center gap-2 bg-active-notion/40 border border-border-notion text-accent px-4 py-2.5 rounded-xl text-xs font-bold cursor-pointer hover:bg-accent/5 transition-all">
                   <FileUp size={16} />
-                  Import CSV
+                  {t('import_csv')}
                   <input type="file" accept=".csv" className="hidden" onChange={handleFileUpload} />
                 </label>
+                <button
+                  type="button"
+                  onClick={downloadQuizCsvSample}
+                  className="flex items-center gap-2 bg-active-notion/40 border border-border-notion text-accent px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-accent/5 transition-all"
+                >
+                  <Download size={16} />
+                  {t('csv_sample_download')}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setShowTextImport(v => !v); setTextImportError(""); }}
+                  className={cn(
+                    "flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold border transition-all",
+                    showTextImport
+                      ? "bg-accent/10 text-accent border-accent/20"
+                      : "bg-active-notion/40 border-border-notion text-accent hover:bg-accent/5"
+                  )}
+                >
+                  <LayoutList size={16} />
+                  Nhập nhanh
+                </button>
                 <button 
                   onClick={() => setIsAdding(true)}
                   className="flex items-center gap-2 bg-active-notion/40 border border-border-notion text-accent px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-accent/5 transition-all"
                 >
                   <Plus size={16} />
-                  Thêm câu hỏi
+                  {t('add_question')}
                 </button>
                 <button
                   onClick={() => setShuffleEnabled(s => !s)}
@@ -255,6 +334,43 @@ export default function QuizManager() {
                 </button>
               </div>
             </div>
+            <p className="text-[11px] text-foreground/50 mt-2">{t('quiz_csv_help')}</p>
+
+            {showTextImport && (
+              <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="mt-6 mb-4 p-6 glass rounded-[24px] border border-accent/20 shadow-xl">
+                <div className="mb-3 flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-bold text-accent uppercase tracking-widest">Nhập nhanh nhiều câu hỏi</p>
+                    <p className="text-[11px] text-foreground/40 mt-1">Mỗi dòng một câu: <span className="font-mono text-accent/60">Câu hỏi;Đáp án 1;Đáp án 2;Đáp án 3;Đáp án 4;Đáp án đúng</span></p>
+                    <p className="text-[11px] text-foreground/30 mt-0.5">Đáp án đúng: nhập số thứ tự (1, 2, 3, 4) hoặc nội dung đáp án đúng</p>
+                  </div>
+                  <button onClick={() => { setShowTextImport(false); setTextImportError(""); setTextImportValue(""); }} className="p-1.5 text-foreground/30 hover:text-accent transition-colors">
+                    <X size={16} />
+                  </button>
+                </div>
+                <textarea
+                  value={textImportValue}
+                  onChange={e => { setTextImportValue(e.target.value); setTextImportError(""); }}
+                  className="w-full p-4 bg-active-notion/40 border border-border-notion rounded-2xl outline-none font-mono text-sm text-accent placeholder:text-foreground/20 focus:ring-1 focus:ring-accent/20 transition-all resize-y"
+                  placeholder={"Trái đất quay quanh cái gì?;Mặt trăng;Mặt trời;Sao Hỏa;Sao Kim;2\nNước sôi ở bao nhiêu độ C?;50;80;100;150;3"}
+                  rows={6}
+                />
+                {textImportError && (
+                  <pre className="mt-2 text-[11px] text-error bg-error/5 rounded-xl p-3 font-mono whitespace-pre-wrap">{textImportError}</pre>
+                )}
+                <div className="flex justify-end gap-3 mt-4">
+                  <button onClick={() => { setShowTextImport(false); setTextImportError(""); setTextImportValue(""); }} className="px-5 py-2 text-foreground/40 font-bold uppercase text-[10px] tracking-widest">Hủy</button>
+                  <button
+                    onClick={handleTextImport}
+                    disabled={!textImportValue.trim()}
+                    className="flex items-center gap-2 bg-accent text-background px-8 py-2.5 rounded-xl font-bold uppercase text-[10px] tracking-widest shadow-lg hover:opacity-90 disabled:opacity-30 transition-all"
+                  >
+                    <Plus size={14} />
+                    Thêm câu hỏi
+                  </button>
+                </div>
+              </motion.div>
+            )}
 
             {isAdding && (
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-10 p-8 glass rounded-[32px] border border-border-notion/50 shadow-2xl">
@@ -345,7 +461,7 @@ export default function QuizManager() {
                   <div className="p-5">
                     <div className="flex items-start justify-between gap-3 mb-4">
                       <p className="font-bold text-accent text-base leading-relaxed flex-1">{q.text}</p>
-                      <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all flex-shrink-0">
+                      <div className="flex gap-2 flex-shrink-0">
                         <button 
                           onClick={() => {
                             setNewText(q.text);
